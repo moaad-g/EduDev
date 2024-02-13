@@ -1,0 +1,17 @@
+function Navbar() {
+    return(
+        <div>
+            <nav>
+                <ul>
+                    lOGIN
+                </ul>
+            </nav>
+        </div>
+
+
+    )
+
+
+}
+
+export default Navbar;
