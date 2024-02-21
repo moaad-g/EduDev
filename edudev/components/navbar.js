@@ -6,7 +6,7 @@ export default function Navbar() {
                     <div class="px-3">
                         <a href="/login" class="text-white bg-blue-700 hover:bg-blue-800 rounded px-2 py-1 block font-medium">Login</a>
                     </div>
-                    <a href="/login" class="text-white bg-blue-700 hover:bg-blue-800 rounded px-2 py-1 block font-medium">Sign Up</a>
+                    <a href="/sign-up" class="text-white bg-blue-700 hover:bg-blue-800 rounded px-2 py-1 block font-medium">Sign Up</a>
                 </div>
                 <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 bg-transparent">
                     <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0">

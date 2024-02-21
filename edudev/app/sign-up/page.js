@@ -2,19 +2,21 @@
 import React, { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "@/app/firebase";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const router = useRouter();
   const [createUser] = useCreateUserWithEmailAndPassword(auth);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = createUser(email,password);
+      const res = await createUser(email,password);
       setEmail('');
       setPassword('');
+      router.push('/login')
       // You can redirect to another page or handle the login success in another way
       console.log({res});
     } catch (error) {

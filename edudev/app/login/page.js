@@ -1,21 +1,28 @@
 'use client'
 import React, { useState } from "react";
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "@/app/firebase";
+import { useRouter } from "next/navigation";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signIn] = useSignInWithEmailAndPassword(auth);
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      // You can redirect to another page or handle the login success in another way
-      console.log("Login successful!");
+      const res = await signIn(email, password);
+      console.log(res);
+      setEmail('');
+      setPassword('');
+      router.push('/')
     } catch (error) {
       console.error("Error during login:", error.message);
     }
-  };
+  }
     return (
         <div className="flex items-center justify-center h-screen">
             <form className="bg-gray-800 p-8 shadow-md rounded-md border border-slate-700" onSubmit={handleLogin}>
