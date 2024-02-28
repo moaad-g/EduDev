@@ -14,7 +14,7 @@ export default function Navbar() {
                             <a href="/" class="py-2 px-3 text-white hover:text-blue-500 md:p-0 bg-transparent">EduDev</a>
                         </li>
                         <li>
-                            <a href="#" class="py-2 px-3 text-white hover:text-blue-500 md:p-0 bg-transparent">About</a>
+                            <a href="/topics" class="py-2 px-3 text-white hover:text-blue-500 md:p-0 bg-transparent">Topics</a>
                         </li>
                         
                     </ul>

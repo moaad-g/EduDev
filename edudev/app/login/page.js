@@ -1,11 +1,12 @@
 'use client'
 import React, { useState } from "react";
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSignInWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from "@/app/firebase";
 import { useRouter } from "next/navigation";
 
 
 const Login = () => {
+  const [user] = useAuthState(auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signIn] = useSignInWithEmailAndPassword(auth);
