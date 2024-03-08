@@ -8,7 +8,6 @@ const ListTopics = () => {
 
     useEffect(() => {
         ;(async () => {
-        console.log(db);
         try {
           const docRef = doc(db, "collectionList", "topicList");
           const docSnap = await getDoc(docRef);
@@ -22,15 +21,18 @@ const ListTopics = () => {
     }, []);
 
   return (
-    <div className="flex justify-center">
-      <h2 className="text-2xl font-bold mb-4">Topics</h2>
-      <ul>
-        {topicList.map(item => (
-          <li key={item} className="py-4">
-            <a href={"topics/"+item} className="font-bold text-l hover:text-blue-300">{item}</a>
-          </li>
-        ))}
-      </ul>
+    <div className="w-3/5 mx-auto flex flex-col items-center">
+      <h2 className="text-4xl relative top-20 font-bold mb-4">Topics</h2>
+      <div className="flex-1"></div>
+      <div>
+        <ul className="text-xl flex-1 flex justify-center items-center relative top-20">
+          {topicList.map(item => (
+            <li key={item} className="p-10">
+              <a href={"topics/"+item} className="font-bold text-l hover:text-blue-300 hover:bg-gray-700 rounded p-8" >{item}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
