@@ -38,7 +38,7 @@ const ListTopic = ({ params }) => {
                 <ul className="text-xl relative top-20">
                 {textList.map(item => (
                     <li key={item} className="list-disc p-3">
-                    <a href={"topics/"+topicName+"/quiz/"+{item}} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+                    <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
                     </li>
                 ))}
                 </ul>
@@ -46,7 +46,7 @@ const ListTopic = ({ params }) => {
                 <ul className="text-xl relative top-20">
                 {quizList.map(item => (
                     <li key={item} className="list-disc p-3">
-                    <a href={"topics/"+topicName+"/quiz/"+{item}} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+                    <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
                     </li>
                 ))}
                 </ul>
