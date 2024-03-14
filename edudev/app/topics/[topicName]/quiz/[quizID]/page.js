@@ -14,7 +14,6 @@ const Quiz = ({ params }) => {
         try {
             const docRef = doc(db, topicName, "Content", "Quizzes", quizID);
             const docSnap = await getDoc(docRef);
-            console.log(docSnap.data().quizInfo[0].Question)
             setQuizInfo(docSnap.data().quizInfo);
         } catch (error) {
           console.error('Error fetching data: ', error);
@@ -22,11 +21,18 @@ const Quiz = ({ params }) => {
       })
       ();
     }, []);
-
-  return (
-    <div>
-        <Question quizInfo={quizInfo} />
-    </div>
-  );
+  if (quizInfo.length === 0){
+    return (
+      <div>
+        <p>loading</p>
+      </div>
+    );
+  } else {
+    return (
+      <div className="max-w-md mx-auto mt-8 p-6 bg-gray-800 rounded-lg">
+         <Question quizInfo={quizInfo} />
+      </div>
+    );
+  }
 };
 export default Quiz;
