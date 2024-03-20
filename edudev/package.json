@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.4",
     "@mui/material-nextjs": "^5.15.11",
     "framer-motion": "^11.0.13",
     "next": "14.0.3",
