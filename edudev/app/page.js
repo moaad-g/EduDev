@@ -1,7 +1,10 @@
-import Image from 'next/image'
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 
 export default function Home() {
   return (
-    <h1>homepage in progress</h1>
-  )
+    <Container fixed>
+      <Button variant="contained">Hello world</Button>
+    </Container>
+  );
 }
