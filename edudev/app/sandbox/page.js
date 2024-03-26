@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { motion, useMotionValue, useTransform , useDragControls } from "framer-motion";
 
 
-const SubWindowWithDraggableNavbar = ({ children }) => {
+const SubWindowWithDraggableNavbar = () => {
     const [icons, setIcons] = useState([{ x: 0, y: 0 }]);
     const dragControls = useDragControls();
 
@@ -18,7 +18,7 @@ const SubWindowWithDraggableNavbar = ({ children }) => {
             {/* Sub-window */}
             <div className="bg-gray-200 rounded-lg shadow-lg relative w-1/2 h-2/3">
                 {/* Navbar attached to sub-window */}
-                <nav className="absolute top-0 left-0 bg-gray-800 text-white py-2 px-4">
+                <nav className="absolute top-0 left-0 bg-gray-800 text-white py-2 px-4 w-full">
                     {/* Navbar content */}
                     <div className="flex space-x-4">
                         {/* Icon */}
@@ -48,8 +48,6 @@ const SubWindowWithDraggableNavbar = ({ children }) => {
 
                 {/* Main content box */}
                 <div className="mt-16">
-                    {/* Your content goes here */}
-                    {children}
                 </div>
             </div>
         </div>
