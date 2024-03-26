@@ -29,7 +29,7 @@ const Quiz = ({ params }) => {
     );
   } else {
     return (
-      <div className="max-w-md mx-auto mt-8 p-6 bg-gray-800 rounded-lg">
+      <div className="max-w-md mx-auto mt-8 p-6 bg-gray-800 rounded-lg shadow-xl">
          <Question quizInfo={quizInfo} />
       </div>
     );

@@ -1,3 +1,4 @@
+import Container from '@mui/material/Container';
 import React, { useState } from "react";
 import { Reorder } from "framer-motion";
 
@@ -64,7 +65,7 @@ const Question = ({ quizInfo }) => {
                         <p>{answerList[1]}</p>
                     </div>
                     <button
-                        className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-auto"
+                        className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-right"
                         onClick={handleNext}
                         disabled={!selection}
                     >
@@ -98,7 +99,7 @@ const Question = ({ quizInfo }) => {
                             </Reorder.Group>
                         </div>
                         <button
-                            className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-auto"
+                            className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-right"
                             onClick={handleNext}
                             disabled={selectionList.length === 0}
                         >
@@ -109,7 +110,6 @@ const Question = ({ quizInfo }) => {
             );
         }
     };
-
     return renderQuestion();
 };
 
