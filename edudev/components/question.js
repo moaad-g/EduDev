@@ -4,7 +4,9 @@ import { Reorder } from "framer-motion";
 
 const Question = ({ quizInfo }) => {
     const [questionNum, setQuestionNum] = useState(0);
+    const [score, setScore] = useState(0);
     const [selection, setSelection] = useState('');
+    const [quizEnd, setQuizEnd] = useState(false);
     const question = quizInfo[questionNum].Question;
     const answerList = quizInfo[questionNum].Answers;
     const correctAns = quizInfo[questionNum].Answers[quizInfo[questionNum].correct];
@@ -21,10 +23,25 @@ const Question = ({ quizInfo }) => {
         setSelection('');
         if (questionNum < quizInfo.length - 1) {
             setQuestionNum(questionNum + 1);
+        } else {
+            if (questionType === 2){
+
+            } else {
+                if (selection == correctAns){
+                    setScore(score+1)
+
+                }
+            }
+
         }
     };
 
     const renderQuestion = () => {
+        if (quizEnd){
+            return (
+                
+            )
+        }
         if (questionType === 0) {
             return (
                 <div>

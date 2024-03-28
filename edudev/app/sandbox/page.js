@@ -55,8 +55,8 @@ const Sandbox = () => {
 
     const deleteDevice = (index) => {
         const updatedDevices = [...devices];
-    updatedDevices.splice(index, 1);
-    setDevices(updatedDevices);
+        updatedDevices.splice(index, 1);
+        setDevices(updatedDevices);
     }
 
     const resetDevice = () => {
@@ -83,7 +83,7 @@ const Sandbox = () => {
                     {/* Icon */}
                     {devices.map((device,index) => (
                         <motion.div
-                            key={device.name}
+                            key={index}
                             drag
                             dragControls={dragControls}
                             dragElastic={0}
