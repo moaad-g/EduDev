@@ -20,25 +20,30 @@ const Question = ({ quizInfo }) => {
 
 
     const handleNext = () => {
+        if (questionType === 2){
+            if (selectionList == correctAns){
+                setScore(score+1)
+            }
+        } else {
+            if (selection == correctAns){
+                setScore(score+1)
+            }
+        }
         setSelection('');
         if (questionNum < quizInfo.length - 1) {
             setQuestionNum(questionNum + 1);
         } else {
-            if (questionType === 2){
-
-            } else {
-                if (selection == correctAns){
-                    setScore(score+1)
-
-                }
-            }
-
+            setQuizEnd(true)  
         }
+        
     };
 
     const renderQuestion = () => {
         if (quizEnd){
             return (
+                <div>
+                    <p> Congrats </p>
+                </div>
                 
             )
         }
