@@ -1,25 +1,78 @@
+'use client'
+import AppBar from '@mui/material/AppBar';
+import { useContext, useState } from 'react';
+import { AuthContext } from "@/app/layout";
+import { Toolbar, Typography } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import IconButton from '@mui/material/IconButton';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { signOut } from 'firebase/auth';
+import { auth } from "@/app/firebase";
+
+
+
 export default function Navbar() {
+    const user = useContext(AuthContext);
+    const [accountMenu, setAccountMenu] = useState(false);
+    const [anchorEl, setAnchorEl] = useState();
+    console.log(user);
     return(
-        <div class="bg-gray-800 border-b border-gray-200">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <div class="px-3">
-                        <a href="/login" class="text-white bg-blue-700 hover:bg-blue-800 rounded px-2 py-1 block font-medium">Login</a>
+        <AppBar position='static' className='bg-gray-900'>
+            <Toolbar className='flex justify-between'>
+                <div className='flex flex-row justify-between items-center m-4'>
+                    <a href="/" class="text-white hover:text-gray-300 rounded px-2 py-1 block font-bold text-xl italic">Edudev</a>
+                    <div className='mx-3 flex'>
+                        <a href="/topics" class="text-white hover:text-gray-300 rounded px-2 py-1 block font-bold">Learn</a>
+                        <a href="/sandbox" class="text-white hover:text-gray-300 rounded px-2 py-1 block font-bold">Sandbox</a>
                     </div>
-                    <a href="/sign-up" class="text-white bg-blue-700 hover:bg-blue-800 rounded px-2 py-1 block font-medium">Sign Up</a>
                 </div>
-                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 bg-transparent">
-                    <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0">
-                        <li>
-                            <a href="/" class="py-2 px-3 text-white hover:text-blue-500 md:p-0 bg-transparent">EduDev</a>
-                        </li>
-                        <li>
-                            <a href="/topics" class="py-2 px-3 text-white hover:text-blue-500 md:p-0 bg-transparent">Topics</a>
-                        </li>
-                        
-                    </ul>
+                <div>
+                    {user && (
+                        <div>
+                            <IconButton
+                                size="large"
+                                aria-label="open account menu"
+                                aria-controls="appbarMenu"
+                                aria-haspopup="true"
+                                onClick={(e) => setAnchorEl(e.currentTarget)}
+                                color="inherit"
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                    }}
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <Menu
+                                id="appbarMenu"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                    }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                    }}
+                                open={Boolean(anchorEl)}
+                                onClose={() => setAnchorEl(null)}
+                            >
+                                <MenuItem onClick={() => console.log("wee")}>Profile</MenuItem>
+                                <MenuItem onClick={() => signOut(auth)} className="hover:bg-red-300">Logout</MenuItem>
+                            </Menu>
+                        </div>
+                    )}
+                    {!user &&(
+                        <div>
+                            <a href="/login" class="text-white mx-5 bg-blue-600 hover:text-gray-300 hover:bg-blue-700 rounded px-2 py-1 block font-bold">Login</a>
+                        </div>
+
+                    )}
                 </div>
-            </div>
-        </div>
+            </Toolbar>
+        </AppBar>
+        
     )
 }

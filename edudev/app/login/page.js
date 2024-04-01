@@ -1,12 +1,14 @@
 'use client'
-import React, { useState } from "react";
-import { useSignInWithEmailAndPassword, useAuthState } from 'react-firebase-hooks/auth';
+import React, { useState , useContext } from "react";
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "@/app/firebase";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/layout";
+
 
 
 const Login = () => {
-  const [user] = useAuthState(auth);
+  const user = useContext(AuthContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signIn] = useSignInWithEmailAndPassword(auth);
@@ -26,6 +28,7 @@ const Login = () => {
   }
     return (
         <div className="flex items-center justify-center h-screen">
+          {!user && (
             <form className="bg-gray-800 p-8 shadow-md rounded-md border border-slate-700" onSubmit={handleLogin}>
             <h2 className="text-2xl font-bold mb-4">Login</h2>
             <div className="mb-4">
@@ -35,7 +38,7 @@ const Login = () => {
                 <input
                 type="email"
                 id="email"
-                className="w-full p-2 border rounded-md focus:text-black"
+                className="w-full p-2 border rounded-md focus:text-black text-black"
                 placeholder="example@company.com"
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -48,7 +51,7 @@ const Login = () => {
                 <input
                 type="password"
                 id="password"
-                className="w-full p-2 border focus:text-black rounded-md"
+                className="w-full p-2 border focus:text-black rounded-md text-black"
                 placeholder="*******"
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -64,6 +67,18 @@ const Login = () => {
                 <a href="/sign-up" className="text-gray-300 text-align:center text-sm hover:text-blue-300">don't have an account?</a>
             </div>
             </form>
+          )}
+          {user &&(
+            <div className="border shadow-lg bg-gray-800 rounded items-center p-10">
+              <div>
+                <h2 className="text-2xl font-bold mb-10">Youre Already Logged In</h2>
+              </div>
+              <div className="flex justify-center">
+                <a href="/" class="text-white mx-5 hover:text-blue-300 rounded px-2 py-1 block">Back to Edudev</a>
+                <a href="/" class="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</a>
+              </div>
+            </div>
+          )}
         </div>
         );
     };
