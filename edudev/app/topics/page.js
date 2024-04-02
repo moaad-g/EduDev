@@ -2,6 +2,11 @@
 import { db } from "@/app/firebase";
 import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore"; 
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea, Container, Card } from '@mui/material';
+
 
 const ListTopics = () => {
     const [topicList, setTopicList] = useState([]);
@@ -21,19 +26,24 @@ const ListTopics = () => {
     }, []);
 
   return (
-    <div className="w-3/5 mx-auto flex flex-col items-center">
-      <h2 className="text-4xl relative top-20 font-bold mb-4">Topics</h2>
-      <div className="flex-1"></div>
-      <div>
-        <ul className="text-xl flex-1 flex justify-center items-center relative top-20">
-          {topicList.map(item => (
-            <li key={item} className="p-10">
-              <a href={"topics/"+item} className="font-bold text-l hover:text-blue-300 hover:bg-gray-700 rounded p-8" >{item}</a>
-            </li>
-          ))}
-        </ul>
+    <Container>
+      <div className="flex justify-center mt-10">
+        <h2 className="text-4xl font-bold underline">Courses</h2>
       </div>
-    </div>
+      <div className="flex-1"></div>
+      <ul className="text-xl">
+        <div className="grid grid-cols-2">
+          {topicList.map(item => (
+            <Card key={item} className="m-10 shadow-xl text-white bg-gray-900 hover:bg-gray-800">
+              <CardActionArea href={"topics/"+item} className="p-10">
+                <h2 className="text-l font-bold">{item}</h2>
+                <p className="text-sm">Click To View Course</p>
+              </CardActionArea>
+            </Card>
+          ))}
+        </div>
+      </ul>
+    </Container>
   );
 };
 

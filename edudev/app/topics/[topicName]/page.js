@@ -2,6 +2,9 @@
 import { db } from "@/app/firebase";
 import React, { useState, useEffect } from "react";
 import { doc, getDocs , collection } from "firebase/firestore"; 
+import { Accordion, AccordionDetails, AccordionSummary, Container } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const ListTopic = ({ params }) => {
     const [quizList, setQuizList] = useState([]);
@@ -30,29 +33,51 @@ const ListTopic = ({ params }) => {
     }, []);
 
   return (
-    <div className="w-3/5 mx-auto flex flex-col items-center">
-        <h2 className="text-4xl relative top-20 font-bold underline drop-shadow-lg mb-4">{topicName}</h2>
-        <div className="flex w-full">
-            <div className="flex flex-col items-start">
-                <h2 className="text-2xl relative top-20 font-bold">Content:</h2>
-                <ul className="text-xl relative top-20">
-                {textList.map(item => (
-                    <li key={item} className="list-disc p-3">
-                    <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
-                    </li>
-                ))}
-                </ul>
-                <h2 className="text-2xl relative top-20 font-bold ma-10">Quizzes:</h2>
-                <ul className="text-xl relative top-20">
-                {quizList.map(item => (
-                    <li key={item} className="list-disc p-3">
-                    <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
-                    </li>
-                ))}
-                </ul>
-            </div>
-        </div>
-    </div>
+    <Container>
+      <div className="flex justify-center mt-10">
+        <h2 className="text-4xl font-bold underline">{topicName} Course Overview</h2>
+      </div>
+      <Accordion disableGutters className="bg-gray-800 rounded m-10 text-white">
+      <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="course_content"
+          id="course_content"
+          className="font-bold text-l underline"
+        >
+          Course Content
+        </AccordionSummary>
+        <AccordionDetails>
+          <ul className="">
+            {textList.map(item => (
+              <li key={item} className="list-disc m-3">
+                <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+              </li>
+            ))}
+          </ul>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion disableGutters className="bg-gray-800 rounded m-10 text-white">
+      <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="course_content"
+          id="course_content"
+          className="font-bold text-l underline"
+        >
+          Quizzes
+        </AccordionSummary>
+        <AccordionDetails>
+          <ul className="">
+            {quizList.map(item => (
+              <li key={item} className="list-disc m-3">
+                <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+              </li>
+            ))}
+          </ul>
+        </AccordionDetails>
+      </Accordion>
+    </Container>
   );
 };
+
 export default ListTopic;
