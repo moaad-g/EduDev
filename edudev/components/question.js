@@ -1,10 +1,11 @@
-import Container from '@mui/material/Container';
 import React, { useState } from "react";
 import { Reorder } from "framer-motion";
+import InfoIcon from '@mui/icons-material/Info';
 
 const Question = ({ quizInfo }) => {
     const [questionNum, setQuestionNum] = useState(0);
     const [score, setScore] = useState(0);
+    const [showInfo, setShowinfo] = useState(false);
     const [selection, setSelection] = useState('');
     const [quizEnd, setQuizEnd] = useState(false);
     const question = quizInfo[questionNum].Question;
@@ -40,6 +41,11 @@ const Question = ({ quizInfo }) => {
 
     const renderQuestion = () => {
         if (quizEnd){
+            const finalScore = score/quizInfo.length;
+            const date = Date();
+            const day = date.getDate()
+            console.log(day)
+            console.log(score)
             return (
                 <div>
                     <p> Congrats </p>
@@ -49,7 +55,7 @@ const Question = ({ quizInfo }) => {
         }
         if (questionType === 0) {
             return (
-                <div>
+                <div className='m-4'>
                     <h2 className="text-2xl mb-4">{question}</h2>
                     <div className="grid grid-cols-1 gap-4">
                         {answerList.map((answer) => (
@@ -73,7 +79,7 @@ const Question = ({ quizInfo }) => {
             );
         } else if (questionType === 1) {
             return (
-                <div>
+                <div className='m-4'>
                     <h2 className="text-2xl mb-4">{question}</h2>
                     <div className="flex">
                         <p>{answerList[0]}</p>
@@ -97,13 +103,24 @@ const Question = ({ quizInfo }) => {
             );
         } else if (questionType === 2) {
             return (
-                <div>
+                <div className='m-4'>
+                    <div className='mb-5 flex justify-between'>
+                        <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
+                        <div onMouseEnter={() => setShowinfo(true)} onMouseLeave={() => setShowinfo(false)}>
+                            <InfoIcon />
+                            {showInfo && (
+                                <div className="absolute top right w-1/2 bg-gray-800 shadow-lg border border-colour-gray-900 text-sm rounded p-2">
+                                    <p>Hint: Drag the items in the right hand column to answer the question</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     <h2>{question}</h2>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <ul>
                                 {answerList.slice(0, answerList.length / 2).map((answer) => (
-                                    <li key={answer} className='border border-gray-300 rounded-md p-4 bg-gray-600 hover:bg-gray-400 mt-3'>
+                                    <li key={answer} className='border border-gray-300 rounded-md p-4 bg-gray-600 mt-3'>
                                         {answer}
                                     </li>
                                 ))}
@@ -113,7 +130,7 @@ const Question = ({ quizInfo }) => {
                             <Reorder.Group axis="y" values={selectionList} onReorder={setSelectionList}>
                                 {selectionList.map(selection => (
                                     <Reorder.Item value={selection}  key={selection}>
-                                        <p className='border border-gray-300 rounded-md p-4 bg-gray-600 hover:bg-gray-400 mt-3'>
+                                        <p className='cursor-pointer border border-gray-300 rounded-md p-4 bg-gray-600 hover:bg-gray-400 mt-3'>
                                             {selection}
                                         </p>
                                     </Reorder.Item>
@@ -121,7 +138,7 @@ const Question = ({ quizInfo }) => {
                             </Reorder.Group>
                         </div>
                         <button
-                            className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-right"
+                            className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600"
                             onClick={handleNext}
                             disabled={selectionList.length === 0}
                         >
