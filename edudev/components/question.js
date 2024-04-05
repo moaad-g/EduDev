@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Reorder } from "framer-motion";
 import InfoIcon from '@mui/icons-material/Info';
+import { AuthContext } from "@/app/layout";
+import { db } from "@/app/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
-const Question = ({ quizInfo }) => {
+
+
+const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
+    const user = useContext(AuthContext);
     const [questionNum, setQuestionNum] = useState(0);
     const [score, setScore] = useState(0);
     const [showInfo, setShowinfo] = useState(false);
@@ -19,36 +25,66 @@ const Question = ({ quizInfo }) => {
         setSelectionList(answerList.slice(answerList.length / 2, answerList.length));
     }
 
-
     const handleNext = () => {
         if (questionType === 2){
             if (selectionList == correctAns){
-                setScore(score+1)
+                setScore(score+1);
             }
+            setSelectionList([])
         } else {
             if (selection == correctAns){
-                setScore(score+1)
+                setScore(score+1);
             }
         }
         setSelection('');
         if (questionNum < quizInfo.length - 1) {
             setQuestionNum(questionNum + 1);
         } else {
-            setQuizEnd(true)  
+            setQuizEnd(true);
         }
         
     };
 
+    const saveScore  = async(day , finalScore) => {
+        // { quizID : [] }
+        var newHistory = [];        
+        if (quizHistory.History){
+            const oldHistory = quizHistory.History;
+            newHistory = [...oldHistory, {date:day , score:finalScore}]
+
+        } else {
+            newHistory = [{date:day , score:finalScore}]
+        }
+        try{
+            await setDoc(docRef, { History: newHistory }, { merge: true });
+        } catch (error){
+            console.error('Error uploading data: ', error);
+        }
+
+        
+    }
+    
+
     const renderQuestion = () => {
         if (quizEnd){
+            var thisQuizHistory = []
             const finalScore = score/quizInfo.length;
-            const date = Date();
+            const date = new Date();
+            console.log(date)
             const day = date.getDate()
-            console.log(day)
+            console.log(docRef)
             console.log(score)
+            if (user){
+                saveScore(day,finalScore)                                
+            }
             return (
                 <div>
-                    <p> Congrats </p>
+                    <div className="flex justify-center">
+                        <p className="mt-10 text-xl"> Congratulations, Quiz Complete!</p>
+                    </div>
+                    <div className="flex justify-center">
+                        <p className="mt-10 text-xl">You achieved {finalScore}%</p>
+                    </div>
                 </div>
                 
             )

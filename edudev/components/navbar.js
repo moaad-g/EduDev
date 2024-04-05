@@ -11,7 +11,6 @@ import { signOut } from 'firebase/auth';
 import { auth } from "@/app/firebase";
 
 
-
 export default function Navbar() {
     const user = useContext(AuthContext);
     const [accountMenu, setAccountMenu] = useState(false);

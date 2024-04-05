@@ -2,11 +2,12 @@
 import Image from 'next/image'
 import React, { useState , useEffect } from "react";
 import { motion, useMotionValue, useTransform , useDragControls } from "framer-motion";
+import { AuthContext } from "@/app/layout";
+import { db } from "@/app/firebase";
+
 
 
 const Sandbox = () => {
-
-
     const [devices,setDevices] = useState([{
         x:50 , y:50 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
     }])
