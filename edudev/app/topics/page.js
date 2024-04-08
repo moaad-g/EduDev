@@ -30,8 +30,6 @@ const ListTopics = () => {
       <div className="flex justify-center mt-10">
         <h2 className="text-4xl font-bold underline">Courses</h2>
       </div>
-      <div className="flex-1"></div>
-      <ul className="text-xl">
         <div className="grid grid-cols-2">
           {topicList.map(item => (
             <Card key={item} className="m-10 shadow-xl text-white bg-gray-900 hover:bg-gray-800">
@@ -42,7 +40,6 @@ const ListTopics = () => {
             </Card>
           ))}
         </div>
-      </ul>
     </Container>
   );
 };

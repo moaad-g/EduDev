@@ -8,7 +8,7 @@ import { AuthContext } from "@/app/layout";
 
 
 const Login = () => {
-  const user = useContext(AuthContext)
+  const user = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signIn] = useSignInWithEmailAndPassword(auth);
@@ -29,7 +29,7 @@ const Login = () => {
     return (
         <div className="flex items-center justify-center h-screen">
           {!user && (
-            <form className="bg-gray-800 p-8 shadow-md rounded-md border border-slate-700" onSubmit={handleLogin}>
+            <form className="bg-gray-800 p-8 shadow-xl rounded-md border border-slate-700" onSubmit={handleLogin}>
             <h2 className="text-2xl font-bold mb-4">Login</h2>
             <div className="mb-4">
                 <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="email">

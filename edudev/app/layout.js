@@ -5,6 +5,9 @@ import { auth } from "@/app/firebase";
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { createContext } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const inter = Inter({ subsets: ['latin'] })
 export const AuthContext = createContext();
@@ -15,8 +18,9 @@ export default function RootLayout({ children }) {
   return (
     <AuthContext.Provider value={user}>
       <html lang="en">
-          <body className={inter.className}>
-            <div><Navbar /></div>
+          <body className={`h-screen h-full ${inter.className}`}>
+            <ToastContainer />
+            <Navbar />
             <div>{children}</div>
           </body>
       </html>

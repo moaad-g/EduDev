@@ -9,9 +9,11 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { signOut } from 'firebase/auth';
 import { auth } from "@/app/firebase";
+import { useRouter } from 'next/navigation';
 
 
 export default function Navbar() {
+    const router = useRouter();
     const user = useContext(AuthContext);
     const [accountMenu, setAccountMenu] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
@@ -58,7 +60,7 @@ export default function Navbar() {
                                 open={Boolean(anchorEl)}
                                 onClose={() => setAnchorEl(null)}
                             >
-                                <MenuItem onClick={() => console.log("wee")}>Profile</MenuItem>
+                                <MenuItem onClick={() => router.push('/profile')}>Profile</MenuItem>
                                 <MenuItem onClick={() => signOut(auth)} className="hover:bg-red-300">Logout</MenuItem>
                             </Menu>
                         </div>
@@ -72,6 +74,5 @@ export default function Navbar() {
                 </div>
             </Toolbar>
         </AppBar>
-        
     )
 }
