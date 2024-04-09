@@ -14,10 +14,8 @@ const Quiz = ({ params }) => {
   const topicName = params.topicName;
   const quizID = params.quizID;
 
-  console.log(user)
-
   useEffect(() => {
-    const getQuiz = async () => {
+    (async () => {
       try {
         const docRef = doc(db, topicName, "Content", "Quizzes", quizID);
         const docSnap = await getDoc(docRef);
@@ -33,8 +31,8 @@ const Quiz = ({ params }) => {
         } catch (error) {
           console.error('Error fetching data: ', error);
         }
-      }
-      getQuiz();
+      })
+      ();
     },[user]);
 
   if (quizInfo.length === 0){

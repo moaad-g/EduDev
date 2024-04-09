@@ -24,7 +24,3 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-
-.textfield__custom {
-  color:aliceblue !important
-}

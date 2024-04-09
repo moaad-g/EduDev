@@ -74,8 +74,8 @@ const Login = () => {
                 <h2 className="text-2xl font-bold mb-10">Youre Already Logged In</h2>
               </div>
               <div className="flex justify-center">
-                <a href="/" class="text-white mx-5 hover:text-blue-300 rounded px-2 py-1 block">Back to Edudev</a>
-                <a href="/" class="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</a>
+                <a href="/" className="text-white mx-5 hover:text-blue-300 rounded px-2 py-1 block">Back to Edudev</a>
+                <a href="/" className="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</a>
               </div>
             </div>
           )}
