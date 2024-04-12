@@ -1,16 +1,32 @@
 'use client'
 import Image from 'next/image'
-import React, { useState , useEffect } from "react";
+import React, { useState , useEffect , useRef , useContext } from "react";
 import { motion, useDragControls } from "framer-motion";
 import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
-
-
+import Xarrow from "react-xarrows";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Button , IconButton , Fab , Select , MenuItem , FormControl , Dialog , DialogTitle , DialogContent} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LanIcon from '@mui/icons-material/Lan';
+import SaveIcon from '@mui/icons-material/Save';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { toast } from 'react-toastify'
+import { collection , getDocs , doc , setDoc } from 'firebase/firestore';
 
 const Sandbox = () => {
-    const [devices,setDevices] = useState([{
-        x:50 , y:50 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+    const user = useContext(AuthContext);
+    const windowRef = useRef(null);
+    const [devices,setDevices] = useState([{ 
+        id: "1" , x:50 , y:50 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+    }, {
+        id: "2" , x:50 , y:100 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+    },{
+        id: "3" , x:50 , y:150 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
     }])
+    const [connections,setConnections] = useState([{start:"1" , end:"2"}, {start:"1" , end:"3"}]);
+
+    // [id: [{id2: ,  type:}]]
 
     const ramVals = {"PC":["4 GB","8 GB","12 GB","16 GB"], "Server":["16,32,64,128"], "DB":["4,8,12,16"]}
     const stoVals = {"PC":["500 GB","1 TB","2 TB","4 TB"]}
@@ -21,12 +37,15 @@ const Sandbox = () => {
     const [newRam, setNewRam] = useState("");
     const [newName, setNewName] = useState("");
     const [newSto, setNewStorage] = useState("");
-
+    const [newStart, setNewStart] = useState(null);
+    const [loadSand, setLoadSand] = useState("");
+    const [savedSands , setSavedSands] = useState([]);
+    const [showLoad,setShowLoad] = useState(false);
+    const [showSave,setShowSave] = useState(false);
     const [disableForm, setDisableForm] = useState(true);
     const [showPopup, setShowPopup] = useState(false);
     const [showDetails, setShowDetails] = useState(null);
-    /* {x: y: type: attr:{ram:suting suting}} */
-    const dragControls = useDragControls();
+    const [sandName, setSandName] = useState("");
 
     useEffect(() => {
         if (newRam === "" || newSto === "" || newCPU === "" || newDeviceType === "" || newName === ""){
@@ -35,29 +54,80 @@ const Sandbox = () => {
             setDisableForm(false)
         }
     }, [newDeviceType, newCPU, newRam, newSto]);
+    
+    useEffect (() => {
+        (async() =>{
+            try {
+                if (user){
+                    const sandRef = collection(db, "Users", user.email, "Sandboxes" );
+                    const sandData = await getDocs(sandRef);
+                    sandData.forEach((doc) => {
+                        console.log(doc.data())
+                        setSavedSands(savedSands  =>[...savedSands,{name:doc.id , devices:doc.data().devices , connections:doc.data().connections}]);
+                    })
+                    console.log(savedSands)
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        })
+        ();
+    },[user])
+
+    const saveSandbox = async() => {
+        const sandRef = doc(db, "Users", user.email, "Sandboxes", sandName )
+        const setSand = await setDoc(sandRef, {devices:devices, connections:connections }, { merge: true })
+    }
+    const loadSandbox = () => {
+        setDevices([])
+        setConnections([])
+        try{
+            console.log(devices);
+            const sandboxObj = savedSands.find(map => map.name === loadSand);
+            setDevices(sandboxObj.devices);
+            setConnections(sandboxObj.connections)
+            setNewName(sandboxObj.name);
+            setShowLoad(false);
+            console.log('here')
+            console.log(sandboxObj)
+            console.log(devices);
+        } catch (error){
+            console.log(error)
+        }
+    }
+
+    const createNextID = () => {
+        var tempIdList = [];
+        var randId = 1;
+        devices.forEach((device) => tempIdList.push(device.id))
+        while (tempIdList.includes(randId)){
+            randId = Math.floor((Math.random() * 1000) + 1)
+        }  
+        return randId
+    };
 
     const handleDrag = (event,info,index) => {
-        console.log(info.point.x)
-        console.log(info.point.y)
         const updateddevices = [...devices];
         updateddevices[index].x = info.point.x
         updateddevices[index].y = info.point.y
         setDevices(updateddevices);
-        console.log(updateddevices[index].x)
-        console.log(updateddevices[index].y)
     };
 
-
     const addDevice = () => {
-        const newDevice = {x: 50, y:50, name:newName , cpu:newCPU, ram:newRam, storage:newSto }
-        setDevices([...devices,newDevice])
-        resetDevice()
+        const newId = createNextID();
+        const newDevice = {id: newId , x: 50, y:50, name:newName , cpu:newCPU, ram:newRam, storage:newSto }
+        setDevices(devices  =>[...devices,newDevice]);
+        resetDevice();
     }
 
-    const deleteDevice = (index) => {
-        const updatedDevices = [...devices];
+    const deleteDevice = (index,id) => {
+        var updatedDevices = [...devices];
+        var updatedConnections = [...connections];
         updatedDevices.splice(index, 1);
-        setDevices(updatedDevices);
+        setDevices(devices => updatedDevices);
+        updatedConnections = updatedConnections.filter(map => map["start"] !== id);
+        updatedConnections = updatedConnections.filter(map => map["end"] !== id);
+        setConnections(connections => updatedConnections);
     }
 
     const resetDevice = () => {
@@ -66,30 +136,43 @@ const Sandbox = () => {
         setNewDeviceType("")
         setNewStorage("")
         setNewName("")
-        setShowPopup(false)
+        setShowPopup(false);
     }
 
+    const newConnection = (connEnd) => {
+        var newConn = {start:newStart, end:connEnd};
+        setConnections([...connections,newConn])
+        setNewStart(null);
+    }
     return (
         <div className="flex justify-center items-center h-screen">
-            {/* Sub-window */}
-            <div className="bg-gray-200 rounded-lg shadow-lg relative w-1/2 h-2/3">
-                <nav className="absolute top-0 left-0 bg-gray-800 text-white py-4 px-4 w-full">
-                    <button className="cursor-pointer" onClick={() => setShowPopup(true)}>
+            <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h-3/4" ref={windowRef}>
+                <nav className="flex justify-between bg-gray-800 text-white py-2 px-4 w-full absolute z-10">
+                    <Button
+                    variant="contained"
+                    color='secondary'
+                    startIcon={<AddCircleIcon />}
+                    onClick={()=>setShowPopup(true)}
+                    disabled={newStart}
+                    >
                         Add Device
-                    </button>
-                
+                    </Button>
+                    {user &&
+                        <div className='flex'>
+                            <IconButton onClick={()=>setShowLoad(true)}>
+                                <CloudDownloadIcon />
+                            </IconButton>
+                        </div>
+                    }
                 </nav>
-                    {/* Navbar content */}
-                <div className="flex space-x-4">
-                    {/* Icon */}
+                <div className="flex flex-wrap space-x-4">
                     {devices.map((device,index) => (
                         <motion.div
-                            key={index}
+                            key={device.id}
                             drag
-                            dragControls={dragControls}
                             dragElastic={0}
                             dragMomentum={false}
-                            dragTransition={{ min: 0, max: Infinity }}
+                            dragConstraints={windowRef}
                             onDragEnd={(event,info) => handleDrag(event,info,index)}
                             style={{
                                 x: device.x,
@@ -99,27 +182,41 @@ const Sandbox = () => {
                             whileTap={{ scale: 0.9 }}
                             onMouseEnter={() => setShowDetails(index)}
                             onMouseLeave={() => setShowDetails(null)}
-                            className="cursor-pointer"
                         >
                             <Image
                                 src={"/images/devices/computer.png"}
                                 width={100}
                                 height={100}
                                 alt="Picture of the author"
+                                id = {device.id}
+                                className="cursor-pointer"
                             />
                             {showDetails === index &&(
-                                <div className="absolute p-3 rounded text-black text-xs bg-white">
-                                    <p>Name: {devices[index].name}</p>
-                                    <p>CPU Cores: {devices[index].cpu}</p>
-                                    <p>RAM: {devices[index].ram}</p>
-                                    <p>Storage: {devices[index].storage}</p>
-                                    <button onClick={() => deleteDevice(index)} className="cursor-pointer bg-red-500 text-white py-1 px-2 m-1 rounded-md hover:bg-red-700"> Delete</button>
+                                <div>
+                                    <div className="absolute p-3 rounded text-black text-xs bg-white">
+                                        <p>Name: {devices[index].name}</p>
+                                        <p>CPU Cores: {devices[index].cpu}</p>
+                                        <p>RAM: {devices[index].ram}</p>
+                                        <p>Storage: {devices[index].storage}</p>
+                                        <div className='flex'>
+                                            <IconButton color='error' onClick={() => deleteDevice(index , device.id)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                            <IconButton color={newStart ?'success': 'info'} onClick={() => { newStart ? newConnection(device.id) : setNewStart(device.id) }}>
+                                                <LanIcon />
+                                            </IconButton>
+                                        </div>
+                                    </div>
                                 </div>
-                            
                             )}
                         </motion.div>
-                    ))}
-
+                        ))}
+                        {connections.map((connection,index) => (
+                            <Xarrow
+                                start={connection.start}
+                                end={connection.end}
+                            />
+                        ))}
                     {showPopup &&(
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg text-black">
                             <h2 className="text-lg font-bold mb-2">Add Device</h2>
@@ -193,10 +290,64 @@ const Sandbox = () => {
                                 </div>
                             )}
 
+
                             <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
                             <button onClick={() => resetDevice()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
                         </div>
                     )}
+                    {newStart && (
+                        <div className="absolute top-16 left-4 bg-white shadow-xl rounded p-4">
+                            <p>select connection end</p>
+                            <Button color='error' onClick={()=>setNewStart(null)}>Cancel</Button>
+                        </div>
+
+                    )}
+                    {user && (
+                        <Fab color="secondary" aria-label="Save Sandbox" className="absolute bottom-4 right-4" onClick={()=>setShowSave(true)}>
+                            <SaveIcon />
+                        </Fab>
+                    )}
+                    <Dialog open={showLoad}>
+                        <div className='p-5'>
+                            <DialogTitle>Select A Saved Sandbox</DialogTitle>
+                            <DialogContent>
+                                <label className="block text-black mb-2">
+                                    <select
+                                        defaultValue=""
+                                        onChange={(e) => setLoadSand(e.target.value)}
+                                        className="block w-full mt-1 p-2 border rounded-md"
+                                    >   
+                                        <option value="" disabled>Select Sandbox</option>
+                                        {savedSands.map ((sand) => (
+                                            <option value={sand.name}>{sand.name}</option>
+                                        ))}
+                                    </select>
+                                </label>
+                            </DialogContent>
+                            <div className='flex justify-end'>
+                                <Button variant="outlined" className='m-2' color='error' onClick={()=>setShowLoad(false)}>Cancel</Button>
+                                <Button variant="outlined" color='info' onClick={()=>loadSandbox()}>Load</Button>
+                            </div>
+                        </div>
+                    </Dialog>
+                    <Dialog open={showSave}>
+                        <div className='p-5'>
+                            <DialogTitle>Set Sandbox Name</DialogTitle>
+                            <DialogContent>
+                                <input
+                                type="text"
+                                id="sandboxName"
+                                className={`p-1 focus:text-black rounded text-black m-1 ${ (sandName.length >= 30) ? 'border-4 border-red-600' : ''}`} 
+                                placeholder={sandName ? sandName: "no name set"}
+                                onChange={(e) => setSandName(e.target.value)}
+                                />
+                            </DialogContent>
+                            <div className='flex justify-end'>
+                                <Button variant="outlined" className='m-2' color='error' onClick={()=>setShowSave(false)}>Cancel</Button>
+                                <Button variant="outlined" color='info' onClick={()=>saveSandbox()}>Save</Button>
+                            </div>
+                        </div>
+                    </Dialog>
                 </div>
             </div>
         </div>

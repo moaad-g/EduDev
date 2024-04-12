@@ -42,7 +42,7 @@ export default function Navbar() {
                             className='flex cursor-pointer'
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            onClick={() => router.push('/topics')}
+                            onClick={() => router.push('/sandbox')}
                         >
                             <Image
                                 src={"/images/sandbox.png"}
@@ -100,7 +100,6 @@ export default function Navbar() {
                         <div>
                             <a href="/login" className="text-white mx-5 bg-blue-600 hover:text-gray-300 hover:bg-blue-700 rounded px-2 py-1 block font-bold">Login</a>
                         </div>
-
                     )}
                 </div>
             </Toolbar>
