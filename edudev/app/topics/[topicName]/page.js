@@ -33,15 +33,15 @@ const ListTopic = ({ params }) => {
 
   return (
     <Container>
-      <div className="flex justify-center mt-10">
-        <Typography level="h2" className="font-bold">{topicName} Course Overview</Typography>
-      </div>
+        <div className="flex justify-center mt-10">
+            <Typography level="h5" className="font-bold">{topicName.toUpperCase()} - COURSE OVERVIEW</Typography>
+        </div>
       <Accordion disableGutters className="rounded m-10 text-white">
       <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="course_content"
           id="course_content"
-          className="font-bold text-xl"
+          className="font-bold text-l"
         >
           Course Content
         </AccordionSummary>
@@ -49,7 +49,7 @@ const ListTopic = ({ params }) => {
           <ul className="">
             {textList.map(item => (
               <li key={item} className="list-disc m-3">
-                <a href={topicName+"/content/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+                <a href={topicName+"/content/"+item} className="font-bold text-m hover:text-blue-300 rounded" >{item}</a>
               </li>
             ))}
           </ul>
@@ -61,7 +61,7 @@ const ListTopic = ({ params }) => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="course_content"
           id="course_content"
-          className="font-bold text-xl"
+          className="font-bold text-l"
         >
           Quizzes
         </AccordionSummary>
@@ -69,7 +69,7 @@ const ListTopic = ({ params }) => {
           <ul className="">
             {quizList.map(item => (
               <li key={item} className="list-disc m-3">
-                <a href={topicName+"/quiz/"+item} className="font-bold text-l hover:text-blue-300 rounded" >{item}</a>
+                <a href={topicName+"/quiz/"+item} className="font-bold text-m hover:text-blue-300 rounded" >{item}</a>
               </li>
             ))}
           </ul>
