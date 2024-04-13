@@ -6,7 +6,7 @@ import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
 import Xarrow from "react-xarrows";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Button , IconButton , Fab , Select , MenuItem , FormControl , Dialog , DialogTitle , DialogContent} from '@mui/material';
+import { Button , IconButton , Fab , Switch , Slider , FormControlLabel , Dialog , DialogTitle , DialogContent} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LanIcon from '@mui/icons-material/Lan';
 import SaveIcon from '@mui/icons-material/Save';
@@ -46,6 +46,8 @@ const Sandbox = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showDetails, setShowDetails] = useState(null);
     const [sandName, setSandName] = useState("");
+    const [isVirtual, setVirtual] = useState(false);
+    const [isCloud, setCloud] = useState(false);
 
     useEffect(() => {
         if (newRam === "" || newSto === "" || newCPU === "" || newDeviceType === "" || newName === ""){
@@ -62,10 +64,8 @@ const Sandbox = () => {
                     const sandRef = collection(db, "Users", user.email, "Sandboxes" );
                     const sandData = await getDocs(sandRef);
                     sandData.forEach((doc) => {
-                        console.log(doc.data())
                         setSavedSands(savedSands  =>[...savedSands,{name:doc.id , devices:doc.data().devices , connections:doc.data().connections}]);
                     })
-                    console.log(savedSands)
                 }
             } catch (error) {
                 console.error(error);
@@ -82,17 +82,13 @@ const Sandbox = () => {
         setDevices([])
         setConnections([])
         try{
-            console.log(devices);
             const sandboxObj = savedSands.find(map => map.name === loadSand);
             setDevices(sandboxObj.devices);
             setConnections(sandboxObj.connections)
             setNewName(sandboxObj.name);
             setShowLoad(false);
-            console.log('here')
-            console.log(sandboxObj)
-            console.log(devices);
         } catch (error){
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -217,84 +213,6 @@ const Sandbox = () => {
                                 end={connection.end}
                             />
                         ))}
-                    {showPopup &&(
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg text-black">
-                            <h2 className="text-lg font-bold mb-2">Add Device</h2>
-                            <label className="block mb-1">
-                                Device Name:
-                            </label>
-                            <input
-                                className="rounded border bg-gray-100 p-1"
-                                type="text"
-                                name="name"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
-                            />
-                            <label className="block mb-2">
-                                Device Type:
-                                <select
-                                    defaultValue=""
-                                    onChange={(e) => setNewDeviceType(e.target.value)}
-                                    className="block w-full mt-1 p-2 border rounded-md"
-                                >   
-                                    <option value="" disabled>Select Device Type</option>
-                                    <option value="PC">Personal Computer</option>
-                                    <option value="Server">App Server</option>
-                                    <option value="DB">Database</option>
-                                </select>
-                            </label>
-                            {newDeviceType != "" && (
-                                <div>
-                                    <div className="py-2">
-                                        <h3 className="block mb-2">Choose CPU:</h3>
-                                        {cpuVals[newDeviceType].map((cpuVal) => (
-                                            <label className="px-3" key={cpuVal}>
-                                            <input
-                                                type="radio"
-                                                name="cpu"
-                                                value={cpuVal}
-                                                onChange={(e) => setNewCPU(e.target.value)}
-                                            />
-                                            {cpuVal} Cores
-                                        </label>
-                                        ))}
-                                    </div>
-                                    <div className="py-2">
-                                        <h3 className="block mb-2">Choose Ram:</h3>
-                                        {ramVals[newDeviceType].map((ramVal) => (
-                                            <label className="px-3" key={ramVal}>
-                                            <input
-                                                type="radio"
-                                                name="rem"
-                                                value={ramVal}
-                                                onChange={(e) => setNewRam(e.target.value)}
-                                            />
-                                            {ramVal}
-                                        </label>
-                                        ))}
-                                    </div>
-                                    <div className="py-2">
-                                        <h3 className="block mb-2">Choose Storage:</h3>
-                                        {stoVals[newDeviceType].map((stoVal) => (
-                                            <label className="px-3" key={stoVal}>
-                                            <input
-                                                type="radio"
-                                                name="storage"
-                                                value={stoVal}
-                                                onChange={(e) => setNewStorage(e.target.value)}
-                                            />
-                                            {stoVal}
-                                        </label>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-
-                            <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
-                            <button onClick={() => resetDevice()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
-                        </div>
-                    )}
                     {newStart && (
                         <div className="absolute top-16 left-4 bg-white shadow-xl rounded p-4">
                             <p>select connection end</p>
@@ -348,6 +266,67 @@ const Sandbox = () => {
                             </div>
                         </div>
                     </Dialog>
+                    {showPopup &&(
+                        <div className="absolute z-20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-lg shadow-lg overflow-y-auto text-black">
+                            <h2 className="text-lg font-bold mb-2">Add Device</h2>
+                            <label className="block mb-1">
+                                Device Name:
+                            </label>
+                            <input
+                                className="rounded border bg-gray-100 p-1"
+                                type="text"
+                                name="name"
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                            />
+                            <label className="block mb-2">
+                                Device Type:
+                                <select
+                                    defaultValue=""
+                                    onChange={(e) => setNewDeviceType(e.target.value)}
+                                    className="block w-full mt-1 p-2 border rounded-md"
+                                >   
+                                    <option value="" disabled>Select Device Type</option>
+                                    <option value="PC">Personal Computer</option>
+                                    <option value="Server">App Server</option>
+                                    <option value="Cluster">Database</option>
+                                </select>
+                            </label>
+                            {(newDeviceType != "") && (
+                                <div>
+                                {newDeviceType == "Server" && (
+                                    <div>
+                                    <div>
+                                        <FormControlLabel control={<Switch onChange={(e)=>setCloud(e.target.checked)} />} label="Cloud" labelPlacement='top' />
+                                        <FormControlLabel control={<Switch color='secondary' onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
+                                    </div>
+                                    {isVirtual && (
+                                        <div>
+                                            <Slider
+                                            color='secondary'
+                                            aria-label="Temperature"
+                                            defaultValue={2}
+                                            valueLabelDisplay="auto"
+                                            shiftStep={1}
+                                            step={1}
+                                            marks
+                                            min={1}
+                                            max={4}
+                                            />
+                                        </div>
+
+                                    )}
+                                    </div>
+                                )}
+                                <div>
+                                   
+                                </div>
+                                </div>
+                            )}
+                            <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
+                            <button onClick={() => resetDevice()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
