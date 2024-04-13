@@ -6,7 +6,7 @@ import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
 import Xarrow from "react-xarrows";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Button , IconButton , Fab , Switch , Slider , FormControlLabel , Dialog , DialogTitle , DialogContent} from '@mui/material';
+import { Button , IconButton , Fab , Switch , Slider , FormControlLabel , Dialog , DialogTitle , DialogContent , Divider} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LanIcon from '@mui/icons-material/Lan';
 import SaveIcon from '@mui/icons-material/Save';
@@ -28,6 +28,14 @@ const Sandbox = () => {
 
     // [id: [{id2: ,  type:}]]
 
+    const ramValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
+                        "Server":[{value:1 ,label:"32GB"},{value:2 ,label:"64GB"},{value:3 ,label:"128GB"},{value:4 ,label:"256GB"},{value:5 ,label:"512GB"},{value:6 ,label:"1TB"}],
+                        };
+    
+    const stoValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
+    "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
+    };
+
     const ramVals = {"PC":["4 GB","8 GB","12 GB","16 GB"], "Server":["16,32,64,128"], "DB":["4,8,12,16"]}
     const stoVals = {"PC":["500 GB","1 TB","2 TB","4 TB"]}
     const cpuVals = {"PC":["4","6","8"]}
@@ -48,6 +56,10 @@ const Sandbox = () => {
     const [sandName, setSandName] = useState("");
     const [isVirtual, setVirtual] = useState(false);
     const [isCloud, setCloud] = useState(false);
+    const [osNum, setOsNum] = useState(0);
+    const [servType, setServeType] = useState("");
+
+
 
     useEffect(() => {
         if (newRam === "" || newSto === "" || newCPU === "" || newDeviceType === "" || newName === ""){
@@ -111,7 +123,8 @@ const Sandbox = () => {
 
     const addDevice = () => {
         const newId = createNextID();
-        const newDevice = {id: newId , x: 50, y:50, name:newName , cpu:newCPU, ram:newRam, storage:newSto }
+        var newDeviceInfo = {};
+        const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
         resetDevice();
     }
@@ -244,7 +257,7 @@ const Sandbox = () => {
                             </DialogContent>
                             <div className='flex justify-end'>
                                 <Button variant="outlined" className='m-2' color='error' onClick={()=>setShowLoad(false)}>Cancel</Button>
-                                <Button variant="outlined" color='info' onClick={()=>loadSandbox()}>Load</Button>
+                                <Button variant="outlined" className='m-2' color='info' onClick={()=>loadSandbox()}>Load</Button>
                             </div>
                         </div>
                     </Dialog>
@@ -267,41 +280,49 @@ const Sandbox = () => {
                         </div>
                     </Dialog>
                     {showPopup &&(
-                        <div className="absolute z-20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded-lg shadow-lg overflow-y-auto text-black">
+                        <div className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 rounded-lg shadow-lg overflow-x-hidden text-white">
                             <h2 className="text-lg font-bold mb-2">Add Device</h2>
                             <label className="block mb-1">
                                 Device Name:
                             </label>
                             <input
-                                className="rounded border bg-gray-100 p-1"
+                                className="rounded border bg-gray-200 p-1 text-black"
                                 type="text"
                                 name="name"
                                 value={newName}
                                 onChange={(e) => setNewName(e.target.value)}
                             />
+                            <Divider className='m-2' variant="middle" />
                             <label className="block mb-2">
                                 Device Type:
                                 <select
                                     defaultValue=""
                                     onChange={(e) => setNewDeviceType(e.target.value)}
-                                    className="block w-full mt-1 p-2 border rounded-md"
+                                    className="block w-full p-2 border rounded-md text-black"
                                 >   
                                     <option value="" disabled>Select Device Type</option>
                                     <option value="PC">Personal Computer</option>
                                     <option value="Server">App Server</option>
-                                    <option value="Cluster">Database</option>
+                                    <option value="Cluster">Cluster</option>
                                 </select>
                             </label>
+                            <Divider className='m-2' variant="middle" />
                             {(newDeviceType != "") && (
                                 <div>
+                                    <div className='flex justify-center items-center mb-4'>
+                                        <p>On Prem</p>
+                                        <Switch color='info' onChange={(e)=>setCloud(e.target.checked)} />
+                                        <p>Cloud</p>
+                                    </div>
+                                    <Divider className='m-2' variant="middle" />
                                 {newDeviceType == "Server" && (
                                     <div>
-                                    <div>
-                                        <FormControlLabel control={<Switch onChange={(e)=>setCloud(e.target.checked)} />} label="Cloud" labelPlacement='top' />
+                                    <div className='flex justify-center'>
                                         <FormControlLabel control={<Switch color='secondary' onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
                                     </div>
                                     {isVirtual && (
                                         <div>
+                                            <h2 className="text-lg font-bold mb-2">Choose Number</h2>
                                             <Slider
                                             color='secondary'
                                             aria-label="Temperature"
@@ -313,11 +334,49 @@ const Sandbox = () => {
                                             min={1}
                                             max={4}
                                             />
+                                            
                                         </div>
 
                                     )}
                                     </div>
                                 )}
+                                {newDeviceType == "Cluster" && (
+                                    <div>
+                                    <div className='flex justify-center'>
+                                        <FormControlLabel control={<Switch color='secondary' onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
+                                    </div>
+                                    {isVirtual && (
+                                        <div>
+                                            <h2 className="text-lg font-bold mb-2">Choose Number</h2>
+                                            <Slider
+                                            color='secondary'
+                                            aria-label="Temperature"
+                                            defaultValue={2}
+                                            valueLabelDisplay="auto"
+                                            shiftStep={1}
+                                            step={1}
+                                            marks
+                                            min={1}
+                                            max={4}
+                                            />
+                                            
+                                        </div>
+
+                                    )}
+                                    </div>
+                                )}
+                                <div className='flex justify-center'>
+                                <Slider
+                                className='w-11/12'
+                                color='secondary'
+                                step={null}
+                                marks={ramValues[newDeviceType]}
+                                min={ramValues[newDeviceType][0].value}
+                                max={ramValues[newDeviceType][ramValues["PC"].length - 1].value}
+                                />
+
+                                </div>
+                                
                                 <div>
                                    
                                 </div>
