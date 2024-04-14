@@ -13,6 +13,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { toast } from 'react-toastify'
 import { collection , getDocs , doc , setDoc } from 'firebase/firestore';
+import { reload } from 'firebase/auth';
 
 
 const Sandbox = () => {
@@ -32,22 +33,20 @@ const Sandbox = () => {
     const ramValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
                         "Server":[{value:1 ,label:"32GB"},{value:2 ,label:"64GB"},{value:3 ,label:"128GB"},{value:4 ,label:"256GB"},{value:5 ,label:"512GB"},{value:6 ,label:"1TB"}],
     };
-
-    const softwareList = {"PC":["Ubuntu", "Mint","Debian"], "Server":["RHEL","CentOS"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"]};
-         
     const stoValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
     "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
     };
+    const cpuValues = { "PC":[{value:1 ,label:"2 Cores"},{value:2 ,label:"4 Cores"},{value:3 ,label:"6 Cores"},{value:4 ,label:"8 Cores"},{value:5 ,label:"12 Cores"}],
+    "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
+    };
 
-    const ramVals = {"PC":["4 GB","8 GB","12 GB","16 GB"], "Server":["16,32,64,128"], "DB":["4,8,12,16"]}
-    const stoVals = {"PC":["500 GB","1 TB","2 TB","4 TB"]}
-    const cpuVals = {"PC":["4","6","8"]}
+    const softwareList = {"PC":["Ubuntu", "Mint","Debian"], "Server":["RHEL","CentOS"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
 
     const [newDeviceType, setNewDeviceType] = useState("");
-    const [newCPU, setNewCPU] = useState("");
-    const [newRam, setNewRam] = useState("");
+    const [newCPU, setNewCPU] = useState();
+    const [newRam, setNewRam] = useState();
     const [newName, setNewName] = useState("");
-    const [newSto, setNewStorage] = useState("");
+    const [newSto, setNewStorage] = useState();
     const [newStart, setNewStart] = useState(null);
     const [loadSand, setLoadSand] = useState("");
     const [savedSands , setSavedSands] = useState([]);
@@ -59,19 +58,28 @@ const Sandbox = () => {
     const [sandName, setSandName] = useState("");
     const [isVirtual, setVirtual] = useState(false);
     const [isCloud, setCloud] = useState(false);
-    const [osNum, setOsNum] = useState(0);
     const [servType, setServeType] = useState("");
     const [vmNum , setVmNum] = useState(1);
     const [virtualMachines , setVirtualMachines] = useState([{}]);
-
-
+    const [fetchSaves, setFetchSaves] = useState(false);
+    const [newOS, setNewOS] = useState("");
 
     useEffect(() => {
-        if (newRam === "" || newSto === "" || newCPU === "" || newDeviceType === "" || newName === ""){
-            setDisableForm(true)
-        } else {
-            setDisableForm(false)
+        const setForm = () =>{
+            if (newDeviceType === "" || newName === ""){
+                return true
+            }
+            if (newDeviceType != "Cluster"){
+                if (newRam === "" || newSto === "" || newCPU === ""){
+                    return true
+                }
+            }
+            if (newDeviceType == "Cluster"){
+
+            }
+            
         }
+        setDisableForm(setForm);
     }, [newDeviceType, newCPU, newRam, newSto]);
     
     useEffect (() => {
@@ -89,13 +97,15 @@ const Sandbox = () => {
             }
         })
         ();
-    },[user])
+    },[user , fetchSaves])
 
     const saveSandbox = async() => {
         const sandRef = doc(db, "Users", user.email, "Sandboxes", sandName )
         const setSand = await setDoc(sandRef, {devices:devices, connections:connections }, { merge: true })
+        setShowSave(false);
+        setFetchSaves(!fetchSaves);
     }
-    const loadSandbox = () => {
+    const loadSandbox = async() => {
         setDevices([])
         setConnections([])
         try{
@@ -138,25 +148,38 @@ const Sandbox = () => {
     }
 
     const setVmFunc = (index , func) => {
-        const newVirtualMachines = [...virtualMachines]
-        newVirtualMachines[index] = { ...newVirtualMachines[index], function: func };
-        setVirtualMachines(virtualMachines => newVirtualMachines);
+        var tempVirtualMachines = [...virtualMachines]
+        tempVirtualMachines[index] = { ...tempVirtualMachines[index], function: func };
+        setVirtualMachines(virtualMachines => tempVirtualMachines);
     };
 
     const setVmSoft = (index , soft) => {
-        const newVirtualMachines = [...virtualMachines]
-        newVirtualMachines[index] = { ...newVirtualMachines[index], software: soft };
-        setVirtualMachines(virtualMachines => newVirtualMachines);
+        var tempVirtualMachines = [...virtualMachines]
+        tempVirtualMachines[index] = { ...tempVirtualMachines[index], software: soft };
+        setVirtualMachines(virtualMachines => tempVirtualMachines);
     };
 
 
     const addDevice = () => {
         const newId = createNextID();
         var newDeviceInfo = {};
+
         if (newDeviceType =="PC"){
-            newDeviceInfo = {OS : "OS" , CPU:"" , RAM:"", STO:""}
+            const ramString = ramValues[newDeviceType][newRam-1].label;
+            const stoString = stoValues[newDeviceType][newSto-1].label;
+            const cpuString = ramValues[newDeviceType][newCPU-1].label;
+            newDeviceInfo = {OS : "" , CPU: cpuString , RAM:ramValues, STO:stoString}
         } else if (newDeviceType =="Server"){
-            newDeviceInfo = {Type:"" , Cloud:"" , VirtualMachines: [],OS : "OS" , CPU:"" , RAM:"", STO:""}
+            const ramString = ramValues[newDeviceType][newRam-1].label;
+            const stoString = stoValues[newDeviceType][newSto-1].label;
+            const cpuString = ramValues[newDeviceType][newCPU-1].label;
+            if (isVirtual){
+                newDeviceInfo = {Type:"" , Cloud:"" , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramValues, STO:stoString}
+            } else {
+                newDeviceInfo = {Type:"" , Cloud:"" , function:servType , OS:newOS , CPU: cpuString , RAM:ramValues, STO:stoString}
+            }
+        } else if (newDeviceType =="Cluster"){
+            newDeviceInfo = {Type:"" , Cloud:""}
         }
         const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
@@ -352,6 +375,13 @@ const Sandbox = () => {
                             {(newDeviceType != "") && (
                                 <div>
                                 {/*SERVER*/}
+                                {newDeviceType != "PC" && (
+                                    <div className='flex justify-center items-center mb-4'>
+                                    <p>On Prem</p>
+                                    <Switch color='info' checked={isCloud} onChange={(e)=>setCloud(e.target.checked)} />
+                                    <p>Cloud</p>
+                                    </div>
+                                )}
                                 {newDeviceType == "Server" && (
                                     <div>
                                         <div className='flex justify-center items-center mb-4'>
@@ -365,7 +395,7 @@ const Sandbox = () => {
                                     </div>
                                     {isVirtual && (
                                         <div className=''>
-                                            <h3 className='mx-auto'>Number of Virtual Mchines:</h3>
+                                            <h3 className='mx-auto'>Number of Virtual Machines:</h3>
                                             <div className='flex justify-center'>
                                                 <Slider
                                                 className='w-11/12'
@@ -400,11 +430,11 @@ const Sandbox = () => {
                                                         {virtualMachines[index].function == "Database Machine" ? "DB Type": "Operating System"}
                                                     <select
                                                         defaultValue=""
-                                                        onChange={(e) => setVmSoft(index , e.target.value)}
+                                                        onChange={(e) => setServeType(index , e.target.value)}
                                                         className="block w-full p-2 border rounded text-xs text-black"
                                                     >   
                                                         <option value="" disabled>Select Machine Software</option>
-                                                        {(softwareList[virtualMachines[index].function == "Database Machine" ? "Database": "Server"]).map((option, index) => (
+                                                        {(softwareList["PC"]).map((option, index) => (
                                                             <option key={index} value={option}>{option}</option>
                                                         ))}
                                                     </select>
@@ -421,23 +451,60 @@ const Sandbox = () => {
                                     </div>
                                 )}
                                 {/*CLUSTER*/}
-                                {newDeviceType == "Cluster" && (
-                                    <div className='flex justify-center items-center mb-4'>
-                                        <p>On Prem</p>
-                                        <Switch color='info' onChange={(e)=>setCloud(e.target.checked)} />
-                                        <p>Cloud</p>
+                                {newDeviceType != "Server" && (
+                                    <label className="block mb-2 text-xs mx-1">
+                                    {newDeviceType == "Cluster" ? "Select Cluster Type": "Select OS"}
+                                    <select
+                                        defaultValue=""
+                                        onChange={(e) => setServeType(e.target.value)}
+                                        className="block w-full p-2 border roundedz text-black"
+                                    >
+                                        <option value="" disabled>---</option>
+                                        {(softwareList[newDeviceType]).map((option, index) => (
+                                            <option key={index} value={option}>{option}</option>
+                                        ))}   
+                                    </select>
+                            </label>
+                                )}
+                                {newDeviceType != "Cluster" && (
+                                    <div className='flex-col justify-center'>
+                                        <label className="block mb-2 mx-1 p-3">
+                                            Set CPU:
+                                            <Slider
+                                            className='w-11/12'
+                                            color='secondary'
+                                            step={null}
+                                            marks={cpuValues[newDeviceType]}
+                                            min={cpuValues[newDeviceType][0].value}
+                                            max={(cpuValues[newDeviceType][cpuValues[newDeviceType].length-1]).value}
+                                            />
+                                        </label>
+                                        <Divider className='m-2' variant="middle" />
+                                        <label className="block mb-2 mx-1 p-3">
+                                            Select RAM:
+                                            <Slider
+                                            className='w-11/12'
+                                            color='secondary'
+                                            step={null}
+                                            marks={ramValues[newDeviceType]}
+                                            min={ramValues[newDeviceType][0].value}
+                                            max={ramValues[newDeviceType][ramValues[newDeviceType].length-1].value}
+                                            />
+                                        </label>
+                                        <Divider className='m-2' variant="middle" />
+                                        <label className="block mb-2 mx-1 p-3">
+                                            Select Storage:
+                                            <Slider
+                                            className='w-11/12'
+                                            color='secondary'
+                                            step={null}
+                                            marks={stoValues[newDeviceType]}
+                                            min={stoValues[newDeviceType][0].value}
+                                            max={stoValues[newDeviceType][stoValues[newDeviceType].length - 1].value}
+                                            />
+                                        </label>                                        
                                     </div>
                                 )}
-                                <div className='flex justify-center'>
-                                    <Slider
-                                    className='w-11/12'
-                                    color='secondary'
-                                    step={null}
-                                    marks={ramValues[newDeviceType]}
-                                    min={ramValues[newDeviceType][0].value}
-                                    max={ramValues[newDeviceType][ramValues["PC"].length - 1].value}
-                                    />
-                                </div>
                             </div>
                             )}
                             <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
