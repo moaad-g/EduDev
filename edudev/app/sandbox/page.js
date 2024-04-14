@@ -6,13 +6,14 @@ import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
 import Xarrow from "react-xarrows";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Button , IconButton , Fab , Switch , Slider , FormControlLabel , Dialog , DialogTitle , DialogContent , Divider} from '@mui/material';
+import { Button , IconButton , Fab , Switch , Slider , FormControlLabel , Dialog , DialogTitle , DialogContent , Divider , Tooltip} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LanIcon from '@mui/icons-material/Lan';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { toast } from 'react-toastify'
 import { collection , getDocs , doc , setDoc } from 'firebase/firestore';
+
 
 const Sandbox = () => {
     const user = useContext(AuthContext);
@@ -30,8 +31,10 @@ const Sandbox = () => {
 
     const ramValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
                         "Server":[{value:1 ,label:"32GB"},{value:2 ,label:"64GB"},{value:3 ,label:"128GB"},{value:4 ,label:"256GB"},{value:5 ,label:"512GB"},{value:6 ,label:"1TB"}],
-                        };
-    
+    };
+
+    const softwareList = {"PC":["Ubuntu", "Mint","Debian"], "Server":["RHEL","CentOS"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"]};
+         
     const stoValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
     "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
     };
@@ -58,6 +61,8 @@ const Sandbox = () => {
     const [isCloud, setCloud] = useState(false);
     const [osNum, setOsNum] = useState(0);
     const [servType, setServeType] = useState("");
+    const [vmNum , setVmNum] = useState(1);
+    const [virtualMachines , setVirtualMachines] = useState([{}]);
 
 
 
@@ -121,9 +126,38 @@ const Sandbox = () => {
         setDevices(updateddevices);
     };
 
+    const setVmLength = (num) => {
+        setVmNum(num);
+        var tempVirtualMachines = [...virtualMachines];
+        if (virtualMachines.length < num){
+            tempVirtualMachines.push({})
+        } else {
+            tempVirtualMachines.length = num;
+        }
+        setVirtualMachines(virtualMachines => tempVirtualMachines)
+    }
+
+    const setVmFunc = (index , func) => {
+        const newVirtualMachines = [...virtualMachines]
+        newVirtualMachines[index] = { ...newVirtualMachines[index], function: func };
+        setVirtualMachines(virtualMachines => newVirtualMachines);
+    };
+
+    const setVmSoft = (index , soft) => {
+        const newVirtualMachines = [...virtualMachines]
+        newVirtualMachines[index] = { ...newVirtualMachines[index], software: soft };
+        setVirtualMachines(virtualMachines => newVirtualMachines);
+    };
+
+
     const addDevice = () => {
         const newId = createNextID();
         var newDeviceInfo = {};
+        if (newDeviceType =="PC"){
+            newDeviceInfo = {OS : "OS" , CPU:"" , RAM:"", STO:""}
+        } else if (newDeviceType =="Server"){
+            newDeviceInfo = {Type:"" , Cloud:"" , VirtualMachines: [],OS : "OS" , CPU:"" , RAM:"", STO:""}
+        }
         const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
         resetDevice();
@@ -155,7 +189,7 @@ const Sandbox = () => {
     }
     return (
         <div className="flex justify-center items-center h-screen">
-            <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h-3/4" ref={windowRef}>
+            <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h h-3/4" ref={windowRef}>
                 <nav className="flex justify-between bg-gray-800 text-white py-2 px-4 w-full absolute z-10">
                     <Button
                     variant="contained"
@@ -208,12 +242,16 @@ const Sandbox = () => {
                                         <p>RAM: {devices[index].ram}</p>
                                         <p>Storage: {devices[index].storage}</p>
                                         <div className='flex'>
-                                            <IconButton color='error' onClick={() => deleteDevice(index , device.id)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                            <IconButton color={newStart ?'success': 'info'} onClick={() => { newStart ? newConnection(device.id) : setNewStart(device.id) }}>
-                                                <LanIcon />
-                                            </IconButton>
+                                            <Tooltip title="delete">
+                                                <IconButton color='error' onClick={() => deleteDevice(index , device.id)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={newStart ?'End Connection': 'New Connection'}>
+                                                <IconButton color={newStart ?'success': 'info'} onClick={() => { newStart ? newConnection(device.id) : setNewStart(device.id) }}>
+                                                    <LanIcon />
+                                                </IconButton>
+                                            </Tooltip>
                                         </div>
                                     </div>
                                 </div>
@@ -224,6 +262,10 @@ const Sandbox = () => {
                             <Xarrow
                                 start={connection.start}
                                 end={connection.end}
+                                path={"grid"}
+                                dashness={true}
+                                animateDrawing
+                                color='green'
                             />
                         ))}
                     {newStart && (
@@ -280,7 +322,7 @@ const Sandbox = () => {
                         </div>
                     </Dialog>
                     {showPopup &&(
-                        <div className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 rounded-lg shadow-lg overflow-x-hidden text-white">
+                        <div className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 h-2/3 rounded shadow-xl overflow-x-hidden overflow-y-auto text-white border border-4 border-gray-300">
                             <h2 className="text-lg font-bold mb-2">Add Device</h2>
                             <label className="block mb-1">
                                 Device Name:
@@ -309,78 +351,94 @@ const Sandbox = () => {
                             <Divider className='m-2' variant="middle" />
                             {(newDeviceType != "") && (
                                 <div>
+                                {/*SERVER*/}
+                                {newDeviceType == "Server" && (
+                                    <div>
+                                        <div className='flex justify-center items-center mb-4'>
+                                            <p>On Prem</p>
+                                            <Switch color='info' checked={isCloud} onChange={(e)=>setCloud(e.target.checked)} />
+                                            <p>Cloud</p>
+                                        </div>
+                                    <Divider className='m-2' variant="middle" />
+                                    <div className='flex justify-center'>
+                                        <FormControlLabel control={<Switch color='secondary' checked={isVirtual} onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
+                                    </div>
+                                    {isVirtual && (
+                                        <div className=''>
+                                            <h3 className='mx-auto'>Number of Virtual Mchines:</h3>
+                                            <div className='flex justify-center'>
+                                                <Slider
+                                                className='w-11/12'
+                                                valueLabelDisplay='auto'
+                                                color='secondary'
+                                                min={1}
+                                                max={4}
+                                                onChange={(e) => setVmLength(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className={`grid grid-rows-${vmNum}`}>
+                                            {Array.from({ length: vmNum }, (vm, index) => (
+                                                <div>
+                                                    <Divider className='m-2' variant="middle" />
+                                                <label>VM {index + 1} Configuration:</label>
+                                                <div key={index} className='grid grid-cols-2'>
+                                                    <label className="block mb-2 text-xs mx-1">
+                                                        Machine Function:
+                                                    <select
+                                                        defaultValue=""
+                                                        onChange={(e) => setVmFunc(index , e.target.value)}
+                                                        className="block w-full p-2 border rounded text-xs text-black"
+                                                    >   
+                                                        <option value="" disabled>Select Machine Function</option>
+                                                        <option value="App Machine">App Machine</option>
+                                                        <option value="Web Machine">Web Machine</option>
+                                                        <option value="File Machine">File Machine</option>
+                                                        <option value="Database Machine">Database Machine</option>
+                                                    </select>
+                                                </label>
+                                                <label className="block mb-2 text-xs">
+                                                        {virtualMachines[index].function == "Database Machine" ? "DB Type": "Operating System"}
+                                                    <select
+                                                        defaultValue=""
+                                                        onChange={(e) => setVmSoft(index , e.target.value)}
+                                                        className="block w-full p-2 border rounded text-xs text-black"
+                                                    >   
+                                                        <option value="" disabled>Select Machine Software</option>
+                                                        {(softwareList[virtualMachines[index].function == "Database Machine" ? "Database": "Server"]).map((option, index) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
+                                                    </select>
+                                                </label>
+                                                    {/* Add your sub-menu components */}
+                                                </div>
+                                                </div>
+                                            ))}
+                                            </div>
+                                        </div>
+
+                                    )}
+                                    <Divider className='m-2' variant="middle" />
+                                    </div>
+                                )}
+                                {/*CLUSTER*/}
+                                {newDeviceType == "Cluster" && (
                                     <div className='flex justify-center items-center mb-4'>
                                         <p>On Prem</p>
                                         <Switch color='info' onChange={(e)=>setCloud(e.target.checked)} />
                                         <p>Cloud</p>
                                     </div>
-                                    <Divider className='m-2' variant="middle" />
-                                {newDeviceType == "Server" && (
-                                    <div>
-                                    <div className='flex justify-center'>
-                                        <FormControlLabel control={<Switch color='secondary' onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
-                                    </div>
-                                    {isVirtual && (
-                                        <div>
-                                            <h2 className="text-lg font-bold mb-2">Choose Number</h2>
-                                            <Slider
-                                            color='secondary'
-                                            aria-label="Temperature"
-                                            defaultValue={2}
-                                            valueLabelDisplay="auto"
-                                            shiftStep={1}
-                                            step={1}
-                                            marks
-                                            min={1}
-                                            max={4}
-                                            />
-                                            
-                                        </div>
-
-                                    )}
-                                    </div>
-                                )}
-                                {newDeviceType == "Cluster" && (
-                                    <div>
-                                    <div className='flex justify-center'>
-                                        <FormControlLabel control={<Switch color='secondary' onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
-                                    </div>
-                                    {isVirtual && (
-                                        <div>
-                                            <h2 className="text-lg font-bold mb-2">Choose Number</h2>
-                                            <Slider
-                                            color='secondary'
-                                            aria-label="Temperature"
-                                            defaultValue={2}
-                                            valueLabelDisplay="auto"
-                                            shiftStep={1}
-                                            step={1}
-                                            marks
-                                            min={1}
-                                            max={4}
-                                            />
-                                            
-                                        </div>
-
-                                    )}
-                                    </div>
                                 )}
                                 <div className='flex justify-center'>
-                                <Slider
-                                className='w-11/12'
-                                color='secondary'
-                                step={null}
-                                marks={ramValues[newDeviceType]}
-                                min={ramValues[newDeviceType][0].value}
-                                max={ramValues[newDeviceType][ramValues["PC"].length - 1].value}
-                                />
-
+                                    <Slider
+                                    className='w-11/12'
+                                    color='secondary'
+                                    step={null}
+                                    marks={ramValues[newDeviceType]}
+                                    min={ramValues[newDeviceType][0].value}
+                                    max={ramValues[newDeviceType][ramValues["PC"].length - 1].value}
+                                    />
                                 </div>
-                                
-                                <div>
-                                   
-                                </div>
-                                </div>
+                            </div>
                             )}
                             <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
                             <button onClick={() => resetDevice()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
