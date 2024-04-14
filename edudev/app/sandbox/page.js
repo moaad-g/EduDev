@@ -74,8 +74,10 @@ const Sandbox = () => {
                     return true
                 }
             }
-            if (newDeviceType == "Cluster"){
-
+            if (newDeviceType != "Server"){
+                if (servType === ""){
+                    return true
+                }
             }
             
         }
@@ -184,6 +186,7 @@ const Sandbox = () => {
         const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
         resetDevice();
+        setShowPopup(false);
     }
 
     const deleteDevice = (index,id) => {
@@ -202,7 +205,16 @@ const Sandbox = () => {
         setNewDeviceType("")
         setNewStorage("")
         setNewName("")
+    }
+
+    const changeType = (newType) => {
+        resetDevice();
+        setNewDeviceType(newType)
+    };
+
+    const closePopup = () => {
         setShowPopup(false);
+        resetDevice();
     }
 
     const newConnection = (connEnd) => {
@@ -347,22 +359,11 @@ const Sandbox = () => {
                     {showPopup &&(
                         <div className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 h-2/3 rounded shadow-xl overflow-x-hidden overflow-y-auto text-white border border-4 border-gray-300">
                             <h2 className="text-lg font-bold mb-2">Add Device</h2>
-                            <label className="block mb-1">
-                                Device Name:
-                            </label>
-                            <input
-                                className="rounded border bg-gray-200 p-1 text-black"
-                                type="text"
-                                name="name"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
-                            />
-                            <Divider className='m-2' variant="middle" />
                             <label className="block mb-2">
                                 Device Type:
                                 <select
                                     defaultValue=""
-                                    onChange={(e) => setNewDeviceType(e.target.value)}
+                                    onChange={(e) => changeType(e.target.value)}
                                     className="block w-full p-2 border rounded-md text-black"
                                 >   
                                     <option value="" disabled>Select Device Type</option>
@@ -374,6 +375,17 @@ const Sandbox = () => {
                             <Divider className='m-2' variant="middle" />
                             {(newDeviceType != "") && (
                                 <div>
+                                    <label className="block mb-1">
+                                    Device Name:
+                                    </label>
+                                    <input
+                                        className=" w-full rounded border bg-gray-200 p-1 text-black"
+                                        type="text"
+                                        name="name"
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
+                                    />
+                                    <Divider className='m-2' variant="middle" />
                                 {/*SERVER*/}
                                 {newDeviceType != "PC" && (
                                     <div className='flex justify-center items-center mb-4'>
@@ -384,11 +396,6 @@ const Sandbox = () => {
                                 )}
                                 {newDeviceType == "Server" && (
                                     <div>
-                                        <div className='flex justify-center items-center mb-4'>
-                                            <p>On Prem</p>
-                                            <Switch color='info' checked={isCloud} onChange={(e)=>setCloud(e.target.checked)} />
-                                            <p>Cloud</p>
-                                        </div>
                                     <Divider className='m-2' variant="middle" />
                                     <div className='flex justify-center'>
                                         <FormControlLabel control={<Switch color='secondary' checked={isVirtual} onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
@@ -430,7 +437,7 @@ const Sandbox = () => {
                                                         {virtualMachines[index].function == "Database Machine" ? "DB Type": "Operating System"}
                                                     <select
                                                         defaultValue=""
-                                                        onChange={(e) => setServeType(index , e.target.value)}
+                                                        onChange={(e) => setVmSoft(index , e.target.value)}
                                                         className="block w-full p-2 border rounded text-xs text-black"
                                                     >   
                                                         <option value="" disabled>Select Machine Software</option>
@@ -457,7 +464,7 @@ const Sandbox = () => {
                                     <select
                                         defaultValue=""
                                         onChange={(e) => setServeType(e.target.value)}
-                                        className="block w-full p-2 border roundedz text-black"
+                                        className="block w-full p-2 border rounded text-black"
                                     >
                                         <option value="" disabled>---</option>
                                         {(softwareList[newDeviceType]).map((option, index) => (
@@ -477,6 +484,7 @@ const Sandbox = () => {
                                             marks={cpuValues[newDeviceType]}
                                             min={cpuValues[newDeviceType][0].value}
                                             max={(cpuValues[newDeviceType][cpuValues[newDeviceType].length-1]).value}
+                                            onChange={(e) => setNewCPU(e.target.value)}
                                             />
                                         </label>
                                         <Divider className='m-2' variant="middle" />
@@ -489,6 +497,7 @@ const Sandbox = () => {
                                             marks={ramValues[newDeviceType]}
                                             min={ramValues[newDeviceType][0].value}
                                             max={ramValues[newDeviceType][ramValues[newDeviceType].length-1].value}
+                                            onChange={(e) => setNewRam(e.target.value)}
                                             />
                                         </label>
                                         <Divider className='m-2' variant="middle" />
@@ -500,7 +509,8 @@ const Sandbox = () => {
                                             step={null}
                                             marks={stoValues[newDeviceType]}
                                             min={stoValues[newDeviceType][0].value}
-                                            max={stoValues[newDeviceType][stoValues[newDeviceType].length - 1].value}
+                                            max={stoValues[newDeviceType][stoValues[newDeviceType].length-1].value}
+                                            onChange={(e) => setNewStorage(e.target.value)}
                                             />
                                         </label>                                        
                                     </div>
@@ -508,7 +518,7 @@ const Sandbox = () => {
                             </div>
                             )}
                             <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
-                            <button onClick={() => resetDevice()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
+                            <button onClick={() => closePopup()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
                         </div>
                     )}
                 </div>
