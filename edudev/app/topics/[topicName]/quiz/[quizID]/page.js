@@ -44,7 +44,7 @@ const Quiz = ({ params }) => {
   } else {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-gray-800 rounded-lg shadow-lg relative w-2/5 h-2/3 shadow-xl">
+        <div className="w-2/5 h-1/2 ">
           <Question quizInfo={quizInfo} quizHistory={quizHistory} docRef={quizRef} quizID={quizID}/>
         </div>
       </div>

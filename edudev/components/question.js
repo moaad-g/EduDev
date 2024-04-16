@@ -4,6 +4,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { Button, IconButton, Tooltip } from '@mui/material';
+import Typography from '@mui/joy/Typography';
 
 
 
@@ -13,7 +15,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     const [score, setScore] = useState(0);
     const [showInfo, setShowinfo] = useState(false);
     const [selection, setSelection] = useState('');
-    const [quizEnd, setQuizEnd] = useState(false);
+    const [quizEnd, setQuizEnd] = useState(true);
     const question = quizInfo[questionNum].Question;
     const answerList = quizInfo[questionNum].Answers;
     const correctAns = quizInfo[questionNum].Answers[quizInfo[questionNum].correct];
@@ -60,8 +62,6 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
         } catch (error){
             console.error('Error uploading data: ', error);
         }
-
-        
     }
     
 
@@ -78,12 +78,12 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                 saveScore(day,finalScore)                                
             }
             return (
-                <div>
-                    <div className="flex justify-center">
-                        <p className="mt-10 text-xl"> Congratulations, Quiz Complete!</p>
+                <div className='bg-gray-800 rounded-lg shadow-lg relative h-full shadow-xl p-4'>
+                    <div className="flex justify-center mt-10">
+                        <Typography level="h4" className="font-bold">Quiz Complete!</Typography>
                     </div>
-                    <div className="flex justify-center">
-                        <p className="mt-10 text-xl">You achieved {finalScore}%</p>
+                    <div className="flex justify-center mt-10">
+                        <Typography level="h5" className="font-bold">You achieved {finalScore}%</Typography>
                     </div>
                 </div>
                 
@@ -91,32 +91,45 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
         }
         if (questionType === 0) {
             return (
-                <div className='m-4'>
+                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
                     <h2 className="text-2xl mb-4">{question}</h2>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-2">
                         {answerList.map((answer) => (
                             <button
                                 key={answer}
-                                className={`border border-gray-300 rounded-md p-4 ${selection === answer ? 'bg-blue-400 hover:bg-blue-500' : 'bg-gray-600 hover:bg-gray-400'}`}
+                                className={`rounded m-3 hover:shadow-xl h-20 p-4 ${selection === answer ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-700 hover:bg-gray-900'}`}
                                 onClick={() => setSelection(answer)}
                             >
                                 {answer}
                             </button>
                         ))}
-                        <button
-                            className="mt-4 bg-blue-500 text-white p-2 w-1/3 rounded hover:bg-blue-600 mx-auto"
-                            onClick={handleNext}
-                            disabled={!selection}
+                    </div>
+                    <div className="flex justify-end">
+                        <Button
+                        className="my-5 mx-3 w-4 px-5 py-2"
+                        variant="outlined"
+                        color="info"
+                        onClick={handleNext}
+                        disabled={!selection}
                         >
                             {(questionNum < quizInfo.length - 1) ? 'Next' : 'Submit'}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             );
         } else if (questionType === 1) {
             return (
-                <div className='m-4'>
-                    <h2 className="text-2xl mb-4">{question}</h2>
+                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
+                    <div className='mb-5 flex justify-between'>
+                        <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
+                        <Tooltip title="Hint: Drag the items in the right hand column to answer the question">
+                            <IconButton>
+                                <InfoIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                    <div className="">
+                    <h2 className="text-2xl my-5">{question}</h2>
                     <div className="flex">
                         <p>{answerList[0]}</p>
                         <input
@@ -128,59 +141,67 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                         />
                         <p>{answerList[1]}</p>
                     </div>
-                    <button
-                        className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600 mx-right"
-                        onClick={handleNext}
-                        disabled={!selection}
-                    >
-                        {(questionNum < quizInfo.length - 1) ? 'Next' : 'Submit'}
-                    </button>
+                    </div>
+                    <div className="flex flex-col justify-end">
+                    <div className="flex justify-end">
+                        <Button
+                                className="mt-10 w-4 font-bold px-5 py-2"
+                                variant="outlined"
+                                color="info"
+                                onClick={handleNext}
+                                disabled={selection.length === 0}
+                            >
+                                {(questionNum < quizInfo.length - 1) ? 'Next' : 'Submit'}
+                        </Button>
+                    </div>
+                    </div>
                 </div>
             );
         } else if (questionType === 2) {
             return (
-                <div className='m-4'>
+                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
                     <div className='mb-5 flex justify-between'>
                         <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
-                        <div onMouseEnter={() => setShowinfo(true)} onMouseLeave={() => setShowinfo(false)}>
-                            <InfoIcon />
-                            {showInfo && (
-                                <div className="absolute top right w-1/2 bg-gray-800 shadow-lg border border-colour-gray-900 text-sm rounded p-2">
-                                    <p>Hint: Drag the items in the right hand column to answer the question</p>
-                                </div>
-                            )}
-                        </div>
+                        <Tooltip title="Hint: Drag the items in the right hand column to answer the question">
+                            <IconButton>
+                                <InfoIcon />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <h2>{question}</h2>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 flex flex-col items-center">
                         <div>
-                            <ul>
+                            <ul> 
                                 {answerList.slice(0, answerList.length / 2).map((answer) => (
-                                    <li key={answer} className='border border-gray-300 rounded-md p-4 bg-gray-600 mt-3'>
+                                    <li key={answer} className='h-20 p-4 shadow-xl mt-3'>
                                         {answer}
                                     </li>
                                 ))}
                             </ul>
                         </div>
                         <div>
-                            <Reorder.Group axis="y" values={selectionList} onReorder={setSelectionList}>
+                            <Reorder.Group axis="y" values={selectionList} onReorder={setSelectionList} className="justify-center items-center">
                                 {selectionList.map(selection => (
                                     <Reorder.Item value={selection}  key={selection}>
-                                        <p className='cursor-pointer border border-gray-300 rounded-md p-4 bg-gray-600 hover:bg-gray-400 mt-3'>
+                                        <p className='cursor-pointer border border-gray-900 rounded p-4 h-20 bg-gray-800 hover:bg-gray-900 hover:shadow-xl mt-3'>
                                             {selection}
                                         </p>
                                     </Reorder.Item>
                                 ))}
                             </Reorder.Group>
                         </div>
-                        <button
-                            className="mt-4 bg-blue-500 text-white w-1/3 p-2 rounded hover:bg-blue-600"
-                            onClick={handleNext}
-                            disabled={selectionList.length === 0}
-                        >
-                            {(questionNum < quizInfo.length - 1) ? 'Next' : 'Submit'}
-                        </button>
                     </div>
+                    <div className="flex justify-end">
+                            <Button
+                                className="my-5 mx-3 px-5 py-2"
+                                variant="outlined"
+                                color="info"
+                                onClick={handleNext}
+                                disabled={selectionList.length === 0}
+                            >
+                                {(questionNum < quizInfo.length - 1) ? 'Next' : 'Submit'}
+                            </Button>
+                        </div>
                 </div>
             );
         }
