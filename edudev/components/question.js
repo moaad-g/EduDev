@@ -6,8 +6,18 @@ import { db } from "@/app/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { Button, IconButton, Tooltip } from '@mui/material';
 import Typography from '@mui/joy/Typography';
+import {Chart as ChartJS,
+    ArcElement,
+    Legend
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { BorderColor } from "@mui/icons-material";
 
 
+ChartJS.register(
+    ArcElement,
+    Legend
+)
 
 const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     const user = useContext(AuthContext);
@@ -15,7 +25,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     const [score, setScore] = useState(0);
     const [showInfo, setShowinfo] = useState(false);
     const [selection, setSelection] = useState('');
-    const [quizEnd, setQuizEnd] = useState(true);
+    const [quizEnd, setQuizEnd] = useState(false);
     const question = quizInfo[questionNum].Question;
     const answerList = quizInfo[questionNum].Answers;
     const correctAns = quizInfo[questionNum].Answers[quizInfo[questionNum].correct];
@@ -58,7 +68,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             newHistory = [{date:day , score:finalScore}]
         }
         try{
-            await setDoc(docRef, { History: newHistory }, { merge: true });
+            await setDoc(docRef, { History: newHistory });
         } catch (error){
             console.error('Error uploading data: ', error);
         }
@@ -70,23 +80,38 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             var thisQuizHistory = []
             const finalScore = score/quizInfo.length;
             const date = new Date();
-            console.log(date)
-            const day = date.getDate()
-            console.log(docRef)
-            console.log(score)
+            console.log(quizHistory.History)
             if (user){
-                saveScore(day,finalScore)                                
+                saveScore((date.toString()),finalScore)                                
+            }
+            const data = {
+                datasets: [{
+                    data:[2,quizInfo.length] , 
+                    backgroundColor: ['green','transparent'],
+                    BorderColorColor: ['red','green'],
+                }]
             }
             return (
-                <div className='bg-gray-800 rounded-lg shadow-lg relative h-full shadow-xl p-4'>
+                <div className='bg-gray-800 rounded-lg shadow-lg relative h-full shadow-xl p-4 overflow-y-auto'>
                     <div className="flex justify-center mt-10">
                         <Typography level="h4" className="font-bold">Quiz Complete!</Typography>
                     </div>
                     <div className="flex justify-center mt-10">
                         <Typography level="h5" className="font-bold">You achieved {finalScore}%</Typography>
                     </div>
+                    <div className="flex justify-center">
+                        <div className="h-1/3 w-1/3">
+                            <Doughnut data={data} options={{}}></Doughnut>
+                        </div>
+                    </div>
+                    {user && (
+                        <div>
+                            {quizHistory.History.map((ans) =>
+                            <p>weee</p>
+                        )}
+                        </div>
+                    )}
                 </div>
-                
             )
         }
         if (questionType === 0) {
