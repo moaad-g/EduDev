@@ -27,6 +27,7 @@
     "react-markdown": "^9.0.1",
     "react-toastify": "^10.0.5",
     "react-xarrows": "^2.0.2",
+    "rehype-raw": "^7.0.0",
     "zero-md": "^2.5.4"
   },
   "devDependencies": {

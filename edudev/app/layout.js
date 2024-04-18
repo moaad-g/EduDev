@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
     <ThemeProvider theme={theme}>
       <AuthContext.Provider value={user}>
         <html lang="en">
-            <body className={`h-screen h-full ${inter.className}`}>
+            <body className={`h-full ${inter.className}`}>
               <ToastContainer />
               <Navbar />
               <div>{children}</div>

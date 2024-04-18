@@ -1,7 +1,7 @@
 'use client'
 import { db } from "@/app/firebase";
 import React, { useState, useEffect , useContext } from "react";
-import ReactMarkdown from 'react-markdown'
+import MarkDown from 'react-markdown'
 import { Container , Paper, Checkbox } from '@mui/material';
 import { AuthContext } from "@/app/layout";
 import Typography from '@mui/joy/Typography';
@@ -9,6 +9,8 @@ import { doc, getDoc , setDoc } from "firebase/firestore";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { toast } from 'react-toastify'
+import rehypeRaw from "rehype-raw";
+
 
 
 
@@ -121,7 +123,7 @@ const ShowContent = ({ params }) => {
                         )}
                     </div>
                 </div>
-                <ReactMarkdown className="text-xl m-4">{mdtext}</ReactMarkdown>
+                <MarkDown rehypePlugins={[rehypeRaw]} className="text-xl m-5">{mdtext}</MarkDown>
                 <div className="flex items-center justify-end">
                     <p >Mark Read</p>
                     <Checkbox

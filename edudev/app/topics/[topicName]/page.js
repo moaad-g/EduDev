@@ -32,7 +32,7 @@ const ListTopic = ({ params }) => {
     }, []);
 
   return (
-    <Container>
+    <Container className="h-screen">
         <div className="flex justify-center mt-10">
             <Typography level="h5" className="font-bold">{topicName.toUpperCase()} - COURSE OVERVIEW</Typography>
         </div>
