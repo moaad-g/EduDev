@@ -19,11 +19,11 @@ const Sandbox = () => {
     const user = useContext(AuthContext);
     const windowRef = useRef(null);
     const [devices,setDevices] = useState([{ 
-        id: "1" , x:50 , y:50 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+        id: "1" , x:50 , y:50 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
     }, {
-        id: "2" , x:50 , y:100 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+        id: "2" , x:50 , y:100 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
     },{
-        id: "3" , x:50 , y:150 , name:"my PC" , type:"PC", cpu:"4", ram:"" , storage:"500 GB"
+        id: "3" , x:50 , y:150 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
     }])
     const [connections,setConnections] = useState([{start:"1" , end:"2"}, {start:"1" , end:"3"}]);
 
@@ -81,7 +81,7 @@ const Sandbox = () => {
             
         }
         setDisableForm(setForm);
-    }, [newDeviceType, newCPU, newRam, newSto]);
+    }, [newDeviceType, newCPU, newRam, newSto, servType, newName]);
     
     useEffect (() => {
         (async() =>{
@@ -111,8 +111,8 @@ const Sandbox = () => {
         setConnections([])
         try{
             const sandboxObj = savedSands.find(map => map.name === loadSand);
-            setDevices(sandboxObj.devices);
-            setConnections(sandboxObj.connections)
+            setDevices(devices => sandboxObj.devices);
+            setConnections(connections => sandboxObj.connections)
             setNewName(sandboxObj.name);
             setShowLoad(false);
         } catch (error){
@@ -122,7 +122,7 @@ const Sandbox = () => {
 
     const createNextID = () => {
         var tempIdList = [];
-        var randId = 1;
+        var randId = randId = Math.floor((Math.random() * 1000) + 1);
         devices.forEach((device) => tempIdList.push(device.id))
         while (tempIdList.includes(randId)){
             randId = Math.floor((Math.random() * 1000) + 1)
@@ -169,18 +169,18 @@ const Sandbox = () => {
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
             const cpuString = ramValues[newDeviceType][newCPU-1].label;
-            newDeviceInfo = {OS : "" , CPU: cpuString , RAM:ramValues, STO:stoString}
+            newDeviceInfo = {Type:newDeviceType , OS : "" , CPU: cpuString , RAM:ramString, STO:stoString}
         } else if (newDeviceType =="Server"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
             const cpuString = ramValues[newDeviceType][newCPU-1].label;
             if (isVirtual){
-                newDeviceInfo = {Type:"" , Cloud:"" , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramValues, STO:stoString}
+                newDeviceInfo = {Type:newDeviceType , Cloud:"" , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramString, STO:stoString}
             } else {
-                newDeviceInfo = {Type:"" , Cloud:"" , function:servType , OS:newOS , CPU: cpuString , RAM:ramValues, STO:stoString}
+                newDeviceInfo = {Type:newDeviceType , Cloud:"" , function:servType , OS:newOS , CPU: cpuString , RAM:ramString, STO:stoString}
             }
         } else if (newDeviceType =="Cluster"){
-            newDeviceInfo = {Type:"" , Cloud:""}
+            newDeviceInfo = {Type:newDeviceType , Cloud:""}
         }
         const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
@@ -217,8 +217,8 @@ const Sandbox = () => {
     }
 
     const newConnection = (connEnd) => {
-        var newConn = {start:newStart, end:connEnd};
-        setConnections([...connections,newConn])
+        var newConn = {start:newStart.toString(), end:connEnd.toString()};
+        setConnections(connections => [...connections,newConn])
         setNewStart(null);
     }
     return (
@@ -245,6 +245,7 @@ const Sandbox = () => {
                 <div className="flex flex-wrap space-x-4">
                     {devices.map((device,index) => (
                         <motion.div
+                            className='cursor-grab'
                             key={device.id}
                             drag
                             dragElastic={0}
@@ -257,7 +258,7 @@ const Sandbox = () => {
                             }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            onMouseEnter={() => setShowDetails(index)}
+                            onMouseEnter={() => setShowDetails(device.id)}
                             onMouseLeave={() => setShowDetails(null)}
                         >
                             <Image
@@ -266,26 +267,43 @@ const Sandbox = () => {
                                 height={100}
                                 alt="Picture of the author"
                                 id = {device.id}
-                                className="cursor-pointer"
                             />
-                            {showDetails === index &&(
+                            {showDetails === device.id &&(
                                 <div>
-                                    <div className="absolute p-3 rounded text-black text-xs bg-white">
+                                    <div className="absolute p-3 rounded text-black bg-white shadow-xl truncate">
+                                        <div className='overflow-y-auto whitespace'>
+                                        <p>Name: {devices[index].id}</p>
                                         <p>Name: {devices[index].name}</p>
-                                        <p>CPU Cores: {devices[index].cpu}</p>
-                                        <p>RAM: {devices[index].ram}</p>
-                                        <p>Storage: {devices[index].storage}</p>
-                                        <div className='flex'>
-                                            <Tooltip title="delete">
-                                                <IconButton color='error' onClick={() => deleteDevice(index , device.id)}>
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={newStart ?'End Connection': 'New Connection'}>
-                                                <IconButton color={newStart ?'success': 'info'} onClick={() => { newStart ? newConnection(device.id) : setNewStart(device.id) }}>
-                                                    <LanIcon />
-                                                </IconButton>
-                                            </Tooltip>
+                                        { ((devices[index].info.Type === "Server")&&(("VirtualMachines" in devices[index].info)) ? (
+                                            <div>
+                                                <p>VM List:</p>
+                                                {(devices[index].info.VirtualMachines).map((vm) => (
+                                                    <div>
+                                                        <p>{vm.function} | {vm.software}</p>
+                                                        <Divider className='m-1' variant="middle" color='error' />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ):(
+                                            <div>
+                                                {Object.entries(devices[index].info).map(([infokey, info]) => (
+                                                    <p>{infokey}:{info}</p>
+                                                ))}
+                                            </div>
+                                        )
+                                        )}
+                                            <div className='flex'>
+                                                <Tooltip title="delete">
+                                                    <IconButton color='error' onClick={() => deleteDevice(index , device.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title={newStart ?'End Connection': 'New Connection'}>
+                                                    <IconButton color={newStart ?'success': 'info'} onClick={() => { newStart ? newConnection(device.id) : setNewStart(device.id) }}>
+                                                        <LanIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -294,11 +312,12 @@ const Sandbox = () => {
                         ))}
                         {connections.map((connection,index) => (
                             <Xarrow
+                                key={index}
                                 start={connection.start}
                                 end={connection.end}
                                 path={"grid"}
                                 dashness={true}
-                                animateDrawing
+                                animateDrawingS
                                 color='green'
                             />
                         ))}
@@ -458,7 +477,7 @@ const Sandbox = () => {
                                 )}
                                 {/*CLUSTER*/}
                                 {newDeviceType != "Server" && (
-                                    <label className="block mb-2 text-xs mx-1">
+                                    <label className="block mb-2 mx-1">
                                     {newDeviceType == "Cluster" ? "Select Cluster Type": "Select OS"}
                                     <select
                                         defaultValue=""
@@ -470,7 +489,7 @@ const Sandbox = () => {
                                             <option key={index} value={option}>{option}</option>
                                         ))}   
                                     </select>
-                            </label>
+                                    </label>
                                 )}
                                 {newDeviceType != "Cluster" && (
                                     <div className='flex-col justify-center'>
