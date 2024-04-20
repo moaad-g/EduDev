@@ -11,8 +11,6 @@ import {Chart as ChartJS,
     Legend
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { BorderColor } from "@mui/icons-material";
-
 
 ChartJS.register(
     ArcElement,
@@ -82,41 +80,46 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             const date = new Date();
             console.log(quizHistory.History)
             if (user){
-                saveScore((date.toString()),finalScore)                                
+                //saveScore((date.toString()),finalScore)                                
             }
             const data = {
                 datasets: [{
-                    data:[2,quizInfo.length] , 
+                    data:[3,quizInfo.length] , 
                     backgroundColor: ['green','transparent'],
-                    BorderColorColor: ['red','green'],
+                    borderColor: ['green','red'],
                 }]
             }
             return (
-                <div className='bg-gray-800 rounded-lg shadow-lg relative h-full shadow-xl p-4 overflow-y-auto'>
-                    <div className="flex justify-center mt-10">
-                        <Typography level="h4" className="font-bold">Quiz Complete!</Typography>
+                <div className='bg-gray-800 rounded-lg w-full h-full shadow-lg relative shadow-xl p-7'>
+                    <div className="flex justify-center mt-1">
+                        <Typography level="h4" className="font-bold">Quiz Complete! {quizInfo.length}</Typography>
                     </div>
-                    <div className="flex justify-center mt-10">
-                        <Typography level="h5" className="font-bold">You achieved {finalScore}%</Typography>
-                    </div>
-                    <div className="flex justify-center">
-                        <div className="h-1/3 w-1/3">
-                            <Doughnut data={data} options={{}}></Doughnut>
+                    <div className="flex justify-between">
+                        <div className="flex flex-col">
+                            <p>here</p>
+                            <Doughnut className="scale-50" data={data} options={{}}></Doughnut>
+                        </div>
+                        <div className="overflow-y-auto max-h-64">
+                            {user && (
+                                <div className="grid grid-cols-2 mt-5 ml-10">
+                                    <p>Score</p>
+                                    <p>Date</p>
+                                    {quizHistory.History.map((ans) =>
+                                    <>
+                                    <p>{ans.score}%</p>
+                                    <p>{ans.date}</p>
+                                    </>
+                                )}
+                                </div>
+                            )}
                         </div>
                     </div>
-                    {user && (
-                        <div>
-                            {quizHistory.History.map((ans) =>
-                            <p>weee</p>
-                        )}
-                        </div>
-                    )}
                 </div>
             )
         }
         if (questionType === 0) {
             return (
-                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
+                <div className='bg-gray-800 rounded-lg shadow-xl p-4'>
                     <h2 className="text-2xl mb-4">{question}</h2>
                     <div className="grid grid-cols-2">
                         {answerList.map((answer) => (
@@ -144,7 +147,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             );
         } else if (questionType === 1) {
             return (
-                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
+                <div className='bg-gray-800 rounded-lg shadow-xl p-4'>
                     <div className='mb-5 flex justify-between'>
                         <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
                         <Tooltip title="Hint: Drag the items in the right hand column to answer the question">
@@ -184,7 +187,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             );
         } else if (questionType === 2) {
             return (
-                <div className='bg-gray-800 rounded-lg shadow-lg relative shadow-xl p-4'>
+                <div className='bg-gray-800 rounded-lg shadow-xl p-4'>
                     <div className='mb-5 flex justify-between'>
                         <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
                         <Tooltip title="Hint: Drag the items in the right hand column to answer the question">

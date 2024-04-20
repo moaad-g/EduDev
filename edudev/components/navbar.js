@@ -6,7 +6,9 @@ import { AppBar , Toolbar } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import SchoolIcon from '@mui/icons-material/School';
 import { signOut } from 'firebase/auth';
 import { auth } from "@/app/firebase";
 import { useRouter } from 'next/navigation';
@@ -19,6 +21,11 @@ export default function Navbar() {
     const user = useContext(AuthContext);
     const [accountMenu, setAccountMenu] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
+
+    const redirectProfile = () => {
+        setAnchorEl(null);
+        router.push('/profile')
+    }
     return(
         <AppBar position='static'>
             <Toolbar className='flex justify-between'>
@@ -44,15 +51,18 @@ export default function Navbar() {
                             whileTap={{ scale: 0.9 }}
                             onClick={() => router.push('/sandbox')}
                         >
-                            <Image
-                                src={"/images/sandbox.png"}
-                                width={22}
-                                height={18}
-                                alt="Picture of the author"
-                            />
-                            <p className='font-bold italic'>SANDBOX</p>
+                            <InventoryIcon/>
+                            <p className='font-bold'>SANDBOX</p>
                         </motion.div>
-                        <a href='/topics' className='font-bold italic mx-8'>LEARN</a>
+                        <motion.div
+                            className='flex cursor-pointer mx-8'
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => router.push('/topics')}
+                        >
+                            <SchoolIcon className='scale-125 mr-1'/>
+                            <p className='font-bold'>LEARN</p>
+                        </motion.div>
                     </div>
                 </div>
                 <div>
@@ -73,7 +83,7 @@ export default function Navbar() {
                                         horizontal: 'right',
                                         }}
                                 >
-                                    <AccountCircle />
+                                    <AccountBoxIcon className='scale-125' />
                                 </IconButton>
                             </motion.div>
                             <Menu
@@ -91,7 +101,7 @@ export default function Navbar() {
                                 open={Boolean(anchorEl)}
                                 onClose={() => setAnchorEl(null)}
                             >
-                                <MenuItem onClick={() => router.push('/profile')}>Profile</MenuItem>
+                                <MenuItem onClick={() => redirectProfile()}>Profile</MenuItem>
                                 <MenuItem onClick={() => signOut(auth)} className="hover:bg-red-300">Logout</MenuItem>
                             </Menu>
                         </div>

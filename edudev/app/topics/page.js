@@ -3,7 +3,9 @@ import { db } from "@/app/firebase";
 import React, { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore"; 
 import Typography from '@mui/joy/Typography';
-import { CardActionArea, Container, Card } from '@mui/material';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import QuizIcon from '@mui/icons-material/Quiz';
+import { CardActionArea, Container, Card , CardContent } from '@mui/material';
 
 
 const ListTopics = () => {
@@ -15,7 +17,7 @@ const ListTopics = () => {
           const docRef = doc(db, "collectionList", "topicList");
           const docSnap = await getDoc(docRef);
           console.log(docSnap.data().topicList);
-          setTopicList(docSnap.data().topicList)
+          setTopicList(docSnap.data().topicList2)
         } catch (error) {
           console.error('Error fetching data: ', error);
         }
@@ -31,9 +33,24 @@ const ListTopics = () => {
         <div className="grid grid-cols-2">
           {topicList.map(item => (
             <Card key={item} className="m-8">
-              <CardActionArea href={"topics/"+item} className="p-10">
-                <h2 className="text-xl font-bold">{item}</h2>
-                <p className="text-m">Click To View Course</p>
+              <CardActionArea disabled={!item.available} href={"topics/"+item.Title} className="p-10">
+                <CardContent>
+                  <h2 className="text-xl mb-3 font-bold">{item.Title}</h2>
+                  <p>{item.Bio}</p>
+                </CardContent>
+                <div className="flex justify-between mt-3">
+                  <p className="text-m text-gray-400">Click To View Course</p>
+                  <div className="flex">
+                    <div className="flex items-center mr-5">
+                      <InsertDriveFileIcon/>
+                      <p>{item.pageNum}</p>
+                    </div>
+                    <div className="flex items-center mr-5">
+                      <QuizIcon/>
+                      <p>{item.quizNum}</p>
+                    </div>
+                  </div>
+                </div>
               </CardActionArea>
             </Card>
           ))}

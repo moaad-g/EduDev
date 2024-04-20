@@ -43,8 +43,8 @@ const Quiz = ({ params }) => {
     );
   } else {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-2/5 h-1/2 ">
+      <div className="flex justify-center h-screen">
+        <div className="w-3/5 h-1/2 mt-10">
           <Question quizInfo={quizInfo} quizHistory={quizHistory} docRef={quizRef} quizID={quizID}/>
         </div>
       </div>
