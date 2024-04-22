@@ -112,57 +112,66 @@ const ProfilePage = () => {
 
     if (user){
         if (progress){
+            
             return(
                 <div className='grid grid-cols-2 h-screen'>
                     <div className='m-10'>
                         <h1 className='text-xl'>Progress:</h1>
                         <Paper className='h-4/5' elevation={24}>
                             <div className='py-5'>
-                            {Object.keys(progress).map(item => {
-                                var topic = topicList.find(topic => topic.Title === item)
-                                return (
-                                <Accordion key={item} elevation={5} disableGutters className="rounded mx-4 text-white">
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="course_content"
-                                    id="course_content"
-                                    className="font-bold text-l"
-                                >
-                                    <div className='flex items-center justify between'>
-                                        <p className='mr-20'>{item}</p>
-                                        <div className='flex items-center'>
-                                            <CircularProgress size={30} variant="determinate" color='info' value={Math.floor(((progress[item].quizzes.length)+(progress[item].pagesRead.length))/((topic.pageNum)+(topic.quizNum))*100)}/>
-                                            <p className='ml-1 text-xs'>{Math.floor(((progress[item].quizzes.length)+(progress[item].pagesRead.length))/((topic.pageNum)+(topic.quizNum))*100)}% complete</p>
-                                        </div>
-                                    </div>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <div className='text-m mb-4'>
-                                        <p>Content - {Math.floor((progress[item].pagesRead.length)/(topic.pageNum)*100)}%</p>
-                                        <LinearProgress size={30} variant="determinate" color='info' value={Math.floor((progress[item].pagesRead.length)/(topic.pageNum)*100)}/>
-                                        <div>
-                                            Pages Read:
-                                            <div>
-                                            {(progress[item].pagesRead).map((page) => (
-                                                <a href={"/topics/"+topic.Title+"/content/"+page} className='hover:text-blue-500' >-{page}</a>
-                                            ))}
+                            {((Object.keys(progress)).length>0) ?
+                                Object.keys(progress).map(item => {
+                                    var topic = topicList.find(topic => topic.Title === item)
+                                    return (
+                                    <Accordion key={item} elevation={5} disableGutters className="rounded mx-4 text-white">
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="course_content"
+                                        id="course_content"
+                                        className="font-bold text-l"
+                                    >
+                                        <div className='flex items-center justify between'>
+                                            <p className='mr-20'>{item}</p>
+                                            <div className='flex items-center'>
+                                                <CircularProgress size={30} variant="determinate" color='info' value={Math.floor(((progress[item].quizzes.length)+(progress[item].pagesRead.length))/((topic.pageNum)+(topic.quizNum))*100)}/>
+                                                <p className='ml-1 text-xs'>{Math.floor(((progress[item].quizzes.length)+(progress[item].pagesRead.length))/((topic.pageNum)+(topic.quizNum))*100)}% complete</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='text-m'>
-                                        <p>Quizzes - {Math.floor((progress[item].quizzes.length)/(topic.quizNum)*100)}%</p>
-                                        <LinearProgress size={30} variant="determinate" color='info' value={Math.floor((progress[item].quizzes.length)/(topic.quizNum)*100)}/>
-                                        Quizzes Completed:
-                                        <div>
-                                        {(progress[item].quizzes).map((quiz) => (
-                                            <a href={"/topics/"+topic.Title+"/quiz/"+quiz} className='hover:text-blue-500' >-{quiz}</a>
-                                        ))}
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className='text-m mb-4'>
+                                            <p>Content - {Math.floor((progress[item].pagesRead.length)/(topic.pageNum)*100)}%</p>
+                                            <LinearProgress size={30} variant="determinate" color='info' value={Math.floor((progress[item].pagesRead.length)/(topic.pageNum)*100)}/>
+                                            <div className='mt-4'>
+                                                Pages Read:
+                                                <div>
+                                                {(progress[item].pagesRead).map((page) => (
+                                                    <a href={"/topics/"+topic.Title+"/content/"+page} className='hover:text-blue-500' >-{page}</a>
+                                                ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                </AccordionDetails>
-                                </Accordion>
-                            )})}   
+                                        <div className='text-m'>
+                                            <p>Quizzes - {Math.floor((progress[item].quizzes.length)/(topic.quizNum)*100)}%</p>
+                                            <LinearProgress size={30} variant="determinate" color='info' value={Math.floor((progress[item].quizzes.length)/(topic.quizNum)*100)}/>
+                                            <div className='mt-4'>
+                                            Quizzes Completed:
+                                                <div>
+                                                {(progress[item].quizzes).map((quiz) => (
+                                                    <a href={"/topics/"+topic.Title+"/quiz/"+quiz} className='hover:text-blue-500' >-{quiz}</a>
+                                                ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </AccordionDetails>
+                                    </Accordion>
+                                )})
+                            :
+                            <div className='m-5'>
+                                Start Learning! Click the Learn Icon in the navbar to get started!
+                            </div>
+                            }   
                             </div>    
                         </Paper>
                     </div>

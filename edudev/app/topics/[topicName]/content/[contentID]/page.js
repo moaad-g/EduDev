@@ -22,9 +22,10 @@ const ShowContent = ({ params }) => {
     const topicName = params.topicName;
     const [userProgress, setProgress] = useState([]);
     const [pageList, setPageList] = useState([]);
-    const [pagePos , setPagePosition] = useState(0);
+    const pagePos = pageList.indexOf(contentID);
     const nextID = pageList[pagePos+1]
     const prevID = pageList[pagePos-1]
+
 
 
     useEffect(() => {
@@ -33,7 +34,6 @@ const ShowContent = ({ params }) => {
           const colRef2 = doc(db, topicName, "Content");
           const col2 = await getDoc(colRef2);
           setPageList(col2.data().Titles);
-          setPagePosition(pageList.indexOf(contentID));
         } catch (error) {
           console.error('Error fetching data: ', error);
         }
@@ -97,8 +97,9 @@ const ShowContent = ({ params }) => {
         }
     }
 
-    //const textbody = marked.parse(mdtext)
     //
+    console.log(pageList)
+    console.log(nextID)
     return(
         <Container>
             <div className="flex justify-center mt-10">
@@ -107,30 +108,32 @@ const ShowContent = ({ params }) => {
             <Paper className="m-4">     
                 <div className="flex items-center justify-between">
                     <div>
-                        {(pagePos > 0) && (
-                            <div className="flex">
+                        {(prevID) && (
+                            <div className="flex  m-3">
                                 <NavigateBeforeIcon />
-                                <a href={topicName+"/content/"+prevID} className="font-bold text-l hover:text-blue-300 rounded" >Previous Page</a>
+                                <a href={"/topics/"+topicName+"/content/"+prevID} className="font-bold text-l hover:text-blue-300 rounded" >Previous Page</a>
                             </div>
                         )}
                     </div>
                     <div>
-                        {(pagePos < pageList.length) && (
+                        {(nextID) && (
                             <div className="flex m-3">
-                                <a href={topicName+"/content/"+nextID} className="font-bold text-l hover:text-blue-300 rounded" >Next Page</a>
+                                <a href={"/topics/"+topicName+"/content/"+nextID} className="font-bold text-l hover:text-blue-300 rounded" >Next Page</a>
                                 <NavigateNextIcon />
                             </div>
                         )}
                     </div>
                 </div>
                 <MarkDown rehypePlugins={[rehypeRaw]} className="text-xl m-5">{mdtext}</MarkDown>
-                <div className="flex items-center justify-end">
-                    <p >Mark Read</p>
-                    <Checkbox
-                    checked={userProgress.includes(contentID)} 
-                    onChange={(e) => editHistory(e)}
-                    color="secondary" />
-                </div>
+                {(user) && (
+                    <div className="flex items-center justify-end">
+                        <p >Mark Read</p>
+                        <Checkbox
+                        checked={userProgress.includes(contentID)} 
+                        onChange={(e) => editHistory(e)}
+                        color="secondary" />
+                    </div>
+                )}
             </Paper>
         </Container>
     )

@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import SchoolIcon from '@mui/icons-material/School';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { signOut } from 'firebase/auth';
 import { auth } from "@/app/firebase";
 import { useRouter } from 'next/navigation';
@@ -67,43 +68,28 @@ export default function Navbar() {
                 </div>
                 <div>
                     {user && (
-                        <div>
+                        <div className='flex'>
                             <motion.div
                                 whileHover={{ scale: 1.1 }}
                             >
                                 <IconButton
                                     size="large"
-                                    aria-label="open account menu"
-                                    aria-controls="appbarMenu"
-                                    aria-haspopup="true"
-                                    onClick={(e) => setAnchorEl(e.currentTarget)}
-                                    color="inherit"
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                        }}
+                                    onClick={() => router.push('/profile')}
                                 >
                                     <AccountBoxIcon className='scale-125' />
                                 </IconButton>
                             </motion.div>
-                            <Menu
-                                id="appbarMenu"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                    }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                    }}
-                                open={Boolean(anchorEl)}
-                                onClose={() => setAnchorEl(null)}
+                            <motion.div
+                                whileHover={{ scale: 1.1 }}
                             >
-                                <MenuItem onClick={() => redirectProfile()}>Profile</MenuItem>
-                                <MenuItem onClick={() => signOut(auth)} className="hover:bg-red-300">Logout</MenuItem>
-                            </Menu>
+                                <IconButton
+                                    size="large"
+                                    onClick={() => signOut(auth)}
+                                >
+                                    <LogoutIcon className='scale-125' />
+                                </IconButton>
+                            </motion.div>
+
                         </div>
                     )}
                     {!user &&(

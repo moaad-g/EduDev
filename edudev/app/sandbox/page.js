@@ -39,7 +39,7 @@ const Sandbox = () => {
     "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
     };
 
-    const softwareList = {"PC":["Ubuntu", "Mint","Debian"], "Server":["RHEL","CentOS"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
+    const softwareList = {"PC":["Ubuntu", "Mint","Debian" , "Windows"], "Server":["RHEL","CentOS","Windows Enterprise"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
 
     const [newDeviceType, setNewDeviceType] = useState("");
     const [newCPU, setNewCPU] = useState();
@@ -470,6 +470,46 @@ const Sandbox = () => {
                                             ))}
                                             </div>
                                         </div>
+
+                                    )}
+                                    {!isVirtual && (
+                                        <div className=''>
+                                            <div>
+                                                <Divider className='m-2' variant="middle" />
+                                            <div className='grid grid-cols-2'>
+                                                <label className="block mb-2 text-xs mx-1">
+                                                    Machine Function:
+                                                <select
+                                                    defaultValue=""
+                                                    onChange={(e) => setServeType(e.target.value)}
+                                                    className="block w-full p-2 border rounded text-xs text-black"
+                                                >   
+                                                    <option value="" disabled>Select Machine Function</option>
+                                                    <option value="App Machine">App Machine</option>
+                                                    <option value="Web Machine">Web Machine</option>
+                                                    <option value="File Machine">File Machine</option>
+                                                    <option value="Database Machine">Database Machine</option>
+                                                </select>
+                                            </label>
+                                            <label className="block mb-2 text-xs">
+                                                    {servType == "Database Machine" ? "DB Type": "Operating System"}
+                                                <select
+                                                    defaultValue=""
+                                                    onChange={(e) => setNewOS(e.target.value)}
+                                                    className="block w-full p-2 border rounded text-xs text-black"
+                                                >   
+                                                    <option value="" disabled>Select Machine Software</option>
+                                                    {(softwareList["PC"]).map((option, index) => (
+                                                        <option key={index} value={option}>{option}</option>
+                                                    ))}
+                                                </select>
+                                            </label>
+                                                {/* Add your sub-menu components */}
+                                            </div>
+                                            </div>
+
+                                        </div>
+
 
                                     )}
                                     <Divider className='m-2' variant="middle" />
