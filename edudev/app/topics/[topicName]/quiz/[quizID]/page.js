@@ -4,6 +4,8 @@ import { doc, getDoc , collection } from "firebase/firestore";
 import Question from "@/components/question";
 import { AuthContext } from "@/app/layout";
 import { db } from "@/app/firebase";
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 
 const Quiz = ({ params }) => {
@@ -37,8 +39,12 @@ const Quiz = ({ params }) => {
 
   if (quizInfo.length === 0){
     return (
-      <div>
-        <p>loading</p>
+      <div className="flex justify-center h-screen">
+        <div className="w-3/5 h-1/2 mt-10">
+          <div className='bg-gray-800 h-full rounded-lg shadow-xl p-4 flex items-center justify-center'>
+            <CircularProgress color="secondary" size={100} />
+          </div>
+        </div>
       </div>
     );
   } else {

@@ -201,7 +201,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                         <div>
                             <ul> 
                                 {answerList.slice(0, answerList.length / 2).map((answer) => (
-                                    <li key={answer} className='h-20 p-4 shadow-xl mt-3'>
+                                    <li key={answer} className='h-20 p-4 shadow-xl mt-3 overflow-hidden'>
                                         {answer}
                                     </li>
                                 ))}
@@ -211,7 +211,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                             <Reorder.Group axis="y" values={selectionList} onReorder={setSelectionList} className="justify-center items-center">
                                 {selectionList.map(selection => (
                                     <Reorder.Item value={selection}  key={selection}>
-                                        <p className='cursor-pointer border border-gray-900 rounded p-4 h-20 bg-gray-800 hover:bg-gray-900 hover:shadow-xl mt-3'>
+                                        <p className='cursor-grab border border-gray-900 rounded p-4 h-20 bg-gray-800 hover:bg-gray-900 hover:shadow-xl mt-3 overflow-hidden'>
                                             {selection}
                                         </p>
                                     </Reorder.Item>
