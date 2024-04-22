@@ -4,8 +4,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from "@/app/firebase";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/app/layout";
-
-
+import { Paper } from '@mui/material';
 
 const Login = () => {
   const user = useContext(AuthContext);
@@ -29,7 +28,8 @@ const Login = () => {
     return (
         <div className="flex items-center justify-center h-screen">
           {!user && (
-            <form className="bg-gray-800 p-8 shadow-xl rounded-md border border-slate-700" onSubmit={handleLogin}>
+            <Paper elevation={10}>
+            <form className="p-8" onSubmit={handleLogin}>
             <h2 className="text-2xl font-bold mb-4">Login</h2>
             <div className="mb-4">
                 <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="email">
@@ -67,9 +67,10 @@ const Login = () => {
                 <a href="/sign-up" className="text-gray-300 text-align:center text-sm hover:text-blue-300">don't have an account?</a>
             </div>
             </form>
+            </Paper>
           )}
           {user &&(
-            <div className="border shadow-lg bg-gray-800 rounded items-center p-10">
+            <Paper elevation={10} className="items-center p-10">
               <div>
                 <h2 className="text-2xl font-bold mb-10">Youre Already Logged In</h2>
               </div>
@@ -77,7 +78,7 @@ const Login = () => {
                 <a href="/" className="text-white mx-5 hover:text-blue-300 rounded px-2 py-1 block">Back to Edudev</a>
                 <a href="/" className="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</a>
               </div>
-            </div>
+            </Paper>
           )}
         </div>
         );

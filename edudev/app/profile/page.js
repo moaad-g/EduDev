@@ -112,7 +112,6 @@ const ProfilePage = () => {
 
     if (user){
         if (progress){
-            const localprog = progress;
             return(
                 <div className='grid grid-cols-2 h-screen'>
                     <div className='m-10'>

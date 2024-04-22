@@ -3,6 +3,7 @@ import { useState , useEffect } from 'react';
 import axios from 'axios';
 import { Card , CardMedia , CardContent , Typography , Button  , Pagination , Container, CardActionArea , Divider } from '@mui/material';
 import { useRouter } from "next/navigation";
+import SignUpComp from '@/components/signup';
 
 
 export default function Home() {
@@ -39,8 +40,16 @@ export default function Home() {
     return (
       <Container>
         <div className='grid grid-cols-2 h-screen mt-10'>
-          <div className=''> 1 </div>
-          <div className=' flex-col justify-between'>
+          <div className='flex flex-col'>
+            <div className='h-1/5 items-center'>
+              <Typography level="h2" className="text-xl font-bold mt-6">START LEARNING</Typography>
+            </div>
+            <div className='w-3/5 items-center'>
+              <Typography level="h2" className="text-xl font-bold mb-3">JOIN EDUDEV!</Typography>
+              <SignUpComp/>
+            </div>
+          </div>
+          <div className='flex-col'>
             <div className='mb-10'>
             <Typography level="h2" className="text-xl font-bold mb-3">NEWS</Typography>
                 <Card elevation={10} className='w-full h-1/2'>
@@ -61,7 +70,7 @@ export default function Home() {
               </div>
             </div>
             <div className='mt-10'>
-              <Typography level="h1" className="text-xl font-bold mb-3">Topic Of the Week</Typography>
+              <Typography level="h1" className="text-xl font-bold mt-10">Topic Of the Week</Typography>
                 <Typography className="truncate" variant="h5">
                     Continuous Integration
                 </Typography>
