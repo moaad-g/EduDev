@@ -16,6 +16,7 @@
     "@mui/joy": "^5.0.0-beta.32",
     "@mui/material": "^5.15.14",
     "@mui/material-nextjs": "^5.15.11",
+    "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "framer-motion": "^11.0.13",
     "leader-line": "^1.0.7",
