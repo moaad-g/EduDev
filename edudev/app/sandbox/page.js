@@ -19,11 +19,11 @@ const Sandbox = () => {
     const user = useContext(AuthContext);
     const windowRef = useRef(null);
     const [devices,setDevices] = useState([{ 
-        id: "1" , x:50 , y:50 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
+        id: "1" , x:50 , y:50 , name:"my PC" , info:{Type:"PC", OS:"Ubuntu" , cpu:"4", ram:"" , storage:"500 GB"}
     }, {
-        id: "2" , x:50 , y:100 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
+        id: "2" , x:50 , y:100 , name:"my PC" , info:{Type:"PC",OS:"Mint", cpu:"4", ram:"" , storage:"500 GB"}
     },{
-        id: "3" , x:50 , y:150 , name:"my PC" , info:{type:"PC", cpu:"4", ram:"" , storage:"500 GB"}
+        id: "3" , x:50 , y:150 , name:"my PC" , info:{Type:"PC", OS:"Mint", cpu:"4", ram:"" , storage:"500 GB"}
     }])
     const [connections,setConnections] = useState([{start:"1" , end:"2"}, {start:"1" , end:"3"}]);
 
@@ -39,7 +39,7 @@ const Sandbox = () => {
     "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
     };
 
-    const softwareList = {"PC":["Ubuntu", "Mint","Debian" , "Windows"], "Server":["RHEL","CentOS","Windows Enterprise"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
+    const softwareList = {"PC":["Ubuntu", "Mint","Debian" , "Windows"], "Server":["RedHat","CentOS","Windows"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
 
     const [newDeviceType, setNewDeviceType] = useState("");
     const [newCPU, setNewCPU] = useState();
@@ -100,6 +100,35 @@ const Sandbox = () => {
         ();
     },[user , fetchSaves])
 
+    const returnImage = (device) => {
+        const info = device.info;
+        var imgString = "";
+        if (info.Type == "PC" ){
+            imgString = imgString+"PC-"+info.OS
+        } else if (info.Type === "Server" ){
+            imgString = imgString+"Server-"
+            if ("VirtualMachines" in info){
+                imgString = imgString+"Virtualisation"
+            } else {
+                imgString = imgString+info.OS
+            }
+            console.log(info.Cloud)
+            if (info.Cloud === "yes"){
+                imgString = imgString+"-Cloud"
+            }
+        } else if (info.Type === "Cluster" ){
+            imgString = imgString+"Cluster-"
+            if (info.function == "App Cluster"){
+                imgString = imgString+"App"
+            } else {
+                imgString = imgString+"Database"
+            }
+            if (info.Cloud === "yes"){
+                imgString = imgString+"-Cloud"
+            }
+        }
+        return (imgString)  
+    }
     const saveSandbox = async() => {
         const sandRef = doc(db, "Users", user.email, "Sandboxes", sandName )
         const setSand = await setDoc(sandRef, {devices:devices, connections:connections }, { merge: true })
@@ -165,22 +194,30 @@ const Sandbox = () => {
         const newId = createNextID();
         var newDeviceInfo = {};
 
+        var cloudString = "";
+
+        if (isCloud){
+            cloudString = "yes"
+        } else {
+            cloudString = "no"
+        }
+
         if (newDeviceType =="PC"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
             const cpuString = ramValues[newDeviceType][newCPU-1].label;
-            newDeviceInfo = {Type:newDeviceType , OS : "" , CPU: cpuString , RAM:ramString, STO:stoString}
+            newDeviceInfo = {Type:newDeviceType , OS :newOS , CPU: cpuString , RAM:ramString, STO:stoString}
         } else if (newDeviceType =="Server"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
             const cpuString = ramValues[newDeviceType][newCPU-1].label;
             if (isVirtual){
-                newDeviceInfo = {Type:newDeviceType , Cloud:"" , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramString, STO:stoString}
+                newDeviceInfo = {Type:newDeviceType , Cloud:cloudString , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramString, STO:stoString}
             } else {
-                newDeviceInfo = {Type:newDeviceType , Cloud:"" , function:servType , OS:newOS , CPU: cpuString , RAM:ramString, STO:stoString}
+                newDeviceInfo = {Type:newDeviceType , Cloud:cloudString , function:servType , OS:newOS , CPU: cpuString , RAM:ramString, STO:stoString}
             }
         } else if (newDeviceType =="Cluster"){
-            newDeviceInfo = {Type:newDeviceType , Cloud:""}
+            newDeviceInfo = {Type:newDeviceType, function:servType , Cloud:cloudString}
         }
         const newDevice = {id: newId , x: 50, y:50, name:newName , info: newDeviceInfo}
         setDevices(devices  =>[...devices,newDevice]);
@@ -262,7 +299,7 @@ const Sandbox = () => {
                             onMouseLeave={() => setShowDetails(null)}
                         >
                             <Image
-                                src={"/images/devices/computer.png"}
+                                src={"/images/devices/"+returnImage(device)+".png"}
                                 width={100}
                                 height={100}
                                 alt="Picture of the author"
@@ -386,7 +423,7 @@ const Sandbox = () => {
                                 >   
                                     <option value="" disabled>Select Device Type</option>
                                     <option value="PC">Personal Computer</option>
-                                    <option value="Server">App Server</option>
+                                    <option value="Server">Server</option>
                                     <option value="Cluster">Cluster</option>
                                 </select>
                             </label>
