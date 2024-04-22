@@ -459,7 +459,12 @@ const Sandbox = () => {
                                                         className="block w-full p-2 border rounded text-xs text-black"
                                                     >   
                                                         <option value="" disabled>Select Machine Software</option>
-                                                        {(softwareList["PC"]).map((option, index) => (
+                                                        {virtualMachines[index].function == "Database Machine" ?
+                                                        (softwareList["Database"]).map((option, index) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                         : 
+                                                        (softwareList["Server"]).map((option, index) => (
                                                             <option key={index} value={option}>{option}</option>
                                                         ))}
                                                     </select>
@@ -499,12 +504,16 @@ const Sandbox = () => {
                                                     className="block w-full p-2 border rounded text-xs text-black"
                                                 >   
                                                     <option value="" disabled>Select Machine Software</option>
-                                                    {(softwareList["PC"]).map((option, index) => (
-                                                        <option key={index} value={option}>{option}</option>
-                                                    ))}
+                                                    {servType == "Database Machine" ?
+                                                        (softwareList["Database"]).map((option, index) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))
+                                                         : 
+                                                        (softwareList["Server"]).map((option, index) => (
+                                                            <option key={index} value={option}>{option}</option>
+                                                        ))}
                                                 </select>
                                             </label>
-                                                {/* Add your sub-menu components */}
                                             </div>
                                             </div>
 
