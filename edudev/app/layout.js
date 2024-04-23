@@ -39,6 +39,7 @@ export default function RootLayout({ children }) {
     <ThemeProvider theme={theme}>
       <AuthContext.Provider value={user}>
         <html lang="en">
+            <title>EduDev</title>
             <body className={`h-full ${inter.className}`}>
               <ToastContainer />
               <Navbar />
