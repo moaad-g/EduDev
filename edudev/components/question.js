@@ -30,11 +30,22 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     const correctAns = quizInfo[questionNum].Answers[quizInfo[questionNum].correct];
     const questionType = quizInfo[questionNum].q_type;
     const [selectionList, setSelectionList] = useState([]);
+    
+    const shuffleArray = (array) => {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return (array)
+    }
 
     // Initialize selectionList for question type 2
     if (questionType === 2 && selectionList.length === 0) {
-        setSelectionList(answerList.slice(answerList.length / 2, answerList.length));
+        setSelectionList(shuffleArray(answerList.slice(answerList.length / 2, answerList.length)));
     }
+    
 
     const handleNext = () => {
         if (questionType === 2){
