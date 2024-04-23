@@ -98,14 +98,12 @@ const ShowContent = ({ params }) => {
     }
 
     //
-    console.log(pageList)
-    console.log(nextID)
     return(
-        <Container>
+        <Container className="min-h-screen">
             <div className="flex justify-center mt-10">
                 <Typography level="h5" className="font-bold">{topicName.toUpperCase()} - {contentID.toUpperCase()}</Typography>
             </div>
-            <Paper className="m-4">     
+            <Paper className="m-4 p-5">     
                 <div className="flex items-center justify-between">
                     <div>
                         {(prevID) && (
@@ -124,16 +122,18 @@ const ShowContent = ({ params }) => {
                         )}
                     </div>
                 </div>
-                <MarkDown rehypePlugins={[rehypeRaw]} className="text-xl m-5">{mdtext}</MarkDown>
-                {(user) && (
-                    <div className="flex items-center justify-end">
-                        <p >Mark Read</p>
-                        <Checkbox
-                        checked={userProgress.includes(contentID)} 
-                        onChange={(e) => editHistory(e)}
-                        color="secondary" />
-                    </div>
-                )}
+                <Paper elevation={20} className="m-5 p-5">
+                    <MarkDown rehypePlugins={[rehypeRaw]} className="text-xl m-5">{mdtext}</MarkDown>
+                    {(user) && (
+                        <div className="flex items-center justify-end">
+                            <p >Mark Read</p>
+                            <Checkbox
+                            checked={userProgress.includes(contentID)} 
+                            onChange={(e) => editHistory(e)}
+                            color="secondary" />
+                        </div>
+                    )}
+                </Paper>
             </Paper>
         </Container>
     )

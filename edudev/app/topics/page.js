@@ -16,7 +16,6 @@ const ListTopics = () => {
         try {
           const docRef = doc(db, "collectionList", "topicList");
           const docSnap = await getDoc(docRef);
-          console.log(docSnap.data().topicList);
           setTopicList(docSnap.data().topicList2)
         } catch (error) {
           console.error('Error fetching data: ', error);
@@ -33,7 +32,7 @@ const ListTopics = () => {
         <div className="grid grid-cols-2">
           {topicList.map(item => (
             <Card key={item} className="m-8">
-              <CardActionArea disabled={!item.available} href={"topics/"+item.Title} className="p-10">
+              <CardActionArea disabled={!item.available} href={"topics/"+item.Title} className="p-10 h-full">
                 <CardContent>
                   <h2 className="text-xl mb-3 font-bold">{item.Title}</h2>
                   <p>{item.Bio}</p>

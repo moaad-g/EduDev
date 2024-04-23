@@ -3,36 +3,25 @@
     What is DevOps?
 </p>
 
-<p className="mb-4">
-    DevOps is well, it's not entirely clear. A methodology? a philosophy? a software trend? all of the above? maybe 
+<p className="my-5">
+    DevOps is well, it's not entirely clear. A methodology? a philosophy? a software trend? all of the above? There isn't a clear and unanimous definintion so the first thing we'll do is define it.
 </p>
 
-## Why Linux?
 
-At its core, Linux embodies the principles of openness, collaboration, and innovation. Unlike proprietary operating systems like Windows or macOS, Linux is free to use, modify, and distribute, making it an attractive choice for individuals, organizations, and enterprises alike.
+**Definition**: DevOps is a methodology which accelerates the speed of app deployment maintenance.
+<p className="m-10"><p>
+We will also use amazon's definition of DevOps best practices to further break down the elements which make up DevOps:
+<ol>
+    <li>- CI/CD (Continuous Integration / Delivery)
+    <li>- Infrastucture As Code
+    <li>- Monitoring
+    <li>- Collaboration
+    <li>- Microservices
+<ol>
 
-## Key Features of Linux
+<p className="m-10"><p>
+So what does this mean, what do all these things do? Well traditionally the app development teams and operation teams were seperate. The app teams would often hand off their code to the operation teams when it was completed and only see it again when it needed changing. DevOps changes this, a DevOps engineer/team will not only write the code but also deploy,maintain and monitor it. simple!
 
-1. **Flexibility**: Linux offers a plethora of distributions (distros), each tailored to meet specific needs and preferences. Whether you're a developer, sysadmin, gamer, or casual user, there's a Linux distro for you.
-
-2. **Stability**: Thanks to its robust architecture and continuous community-driven development, Linux is renowned for its stability and reliability. It's not uncommon for Linux servers to run for years without needing a reboot.
-
-3. **Security**: Linux's security model is second to none. With built-in features like mandatory access controls (MAC), granular permissions, and regular security updates, Linux provides a secure computing environment that's trusted by organizations worldwide.
-
-4. **Performance**: Linux is lightweight and optimized for efficiency, making it ideal for resource-constrained environments. Whether you're running a high-traffic website or a low-powered IoT device, Linux delivers exceptional performance without breaking a sweat.
-
-## Getting Started with Linux
-
-Ready to take the plunge into the world of Linux? Here's how to get started:
-
-1. **Choose a Distro**: With hundreds of Linux distros to choose from, selecting the right one can seem daunting. Popular options include Ubuntu, Fedora, Debian, and CentOS. Each distro has its own unique features and target audience, so take your time to find the one that best suits your needs.
-
-2. **Installation**: Once you've chosen a distro, it's time to install Linux on your computer. Most distros offer user-friendly installation wizards that guide you through the process step by step. You can either install Linux alongside your existing operating system or replace it entirely—it's up to you!
-
-3. **Explore and Experiment**: Congratulations, you're now running Linux! Take some time to explore the system, experiment with different applications, and familiarize yourself with the command-line interface. Don't be afraid to make mistakes—learning is all part of the Linux experience.
-
-## Conclusion
-
-Linux isn't just an operating system; it's a testament to the power of collaboration, creativity, and community. Whether you're a seasoned sysadmin or a curious newcomer, Linux welcomes you with open arms. So why wait? Embrace the open-source revolution and join millions of users worldwide in experiencing the freedom and flexibility of Linux.
-
-<iframe width="640" height="320" src="https://www.youtube.com/embed/7XqTuS3nMs8" title="Jiu Jitsu Secrets: Jozef Chen and his coach Reveal ADCC Trial Prep - Full Conversation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<p className="m-10"><p>
+Enough reading, here is a great video from github promply explaining the concept:
+<iframe className="w-full" width="1264" height="711" src="https://www.youtube.com/embed/kBV8gPVZNEE" title="What is DevOps?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

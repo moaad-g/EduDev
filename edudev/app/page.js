@@ -32,10 +32,6 @@ export default function Home() {
     ();
   },[])
 
-  useEffect (() => {
-    console.log()
-  },[currentArticle])
-
   if(articleList){
     const article = articleList[currentArticle];
     return (

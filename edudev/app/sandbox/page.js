@@ -112,7 +112,6 @@ const Sandbox = () => {
             } else {
                 imgString = imgString+info.OS
             }
-            console.log(info.Cloud)
             if (info.Cloud === "yes"){
                 imgString = imgString+"-Cloud"
             }

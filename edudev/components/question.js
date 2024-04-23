@@ -112,7 +112,6 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             var thisQuizHistory = []
             const finalScore = Math.floor((score/quizInfo.length)*100);
             const date = new Date();
-            console.log(quizHistory.History)
             if (user){
                 //saveScore((date.toString()),finalScore)                                
             }

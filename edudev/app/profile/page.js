@@ -52,7 +52,6 @@ const ProfilePage = () => {
                 try {
                     var tempProgress = preProgress;
                     for (const title in preProgress){
-                        console.log(title)
                         const docRef2 = collection(db, "Users", user.email, "LearningProgress" , title , "Quizzes" );
                         const histSnap = await getDocs(docRef2);
                         histSnap.forEach(doc => {
