@@ -3,8 +3,6 @@ import Image from 'next/image'
 import { useContext, useState } from 'react';
 import { AuthContext } from "@/app/layout";
 import { AppBar , Toolbar } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import IconButton from '@mui/material/IconButton';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -72,6 +70,7 @@ export default function Navbar() {
                                 whileHover={{ scale: 1.1 }}
                             >
                                 <IconButton
+                                    aria-label="profile"
                                     size="large"
                                     onClick={() => router.push('/profile')}
                                 >
@@ -82,6 +81,7 @@ export default function Navbar() {
                                 whileHover={{ scale: 1.1 }}
                             >
                                 <IconButton
+                                    aria-label="logout"
                                     size="large"
                                     onClick={() => logOut()}
                                 >

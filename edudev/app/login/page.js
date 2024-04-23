@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/app/layout";
 import { Paper } from '@mui/material';
 import { toast } from 'react-toastify';
+import { signOut } from 'firebase/auth';
 
 const Login = () => {
   const user = useContext(AuthContext);

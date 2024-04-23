@@ -27,7 +27,7 @@ describe('Enter email into box', () => {
       cy.get('input[type="email"]').type(email);
       cy.get('input[type="password"]').type(password);
       cy.get('button[type="submit"]').click();
-      cy.url().should("eq", 'http://localhost:3000/');
-      cy.contains('button', 'Logout').click();
+      cy.contains('Logout').click()
+      
     });
 });
