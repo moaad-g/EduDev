@@ -36,7 +36,7 @@ const ListTopic = ({ params }) => {
         <div className="flex justify-center mt-10">
             <Typography level="h5" className="font-bold">{topicName.toUpperCase()} - COURSE OVERVIEW</Typography>
         </div>
-      <Accordion disableGutters className="rounded m-10 text-white">
+      <Accordion defaultExpanded disableGutters className="rounded m-10 text-white">
       <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="course_content"

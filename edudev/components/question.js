@@ -73,39 +73,53 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
         }
     }
     
-
     const renderQuestion = () => {
         if (quizStart){
             return (
-                <div className='bg-gray-800 flex flex-col justify-between rounded-lg w-full h-full shadow-lg relative shadow-xl p-7'>
+                <div className='bg-gray-800 flex flex-col justify-between rounded-lg w-full h-full relative shadow-xl p-7'>
                     <div className="flex justify-center mt-1">
                         <Typography level="h4" className="font-bold">Start Quiz</Typography>
                     </div>
+                    {(user) && 
+                        quizHistory.History ? (
                         <div className="overflow-y-auto max-h-64">
-                            {user && (
-                                <div className="grid grid-cols-2 mt-5 ml-10">
-                                    <p>Score</p>
-                                    <p>Date</p>
-                                    {quizHistory.History.map((ans) =>
-                                    <>
-                                    <p>{ans.score}%</p>
-                                    <p>{ans.date}</p>
-                                    </>
+                            <div className="mb-4 flex justify-center">
+                                <Typography level="h5" className="underline font-bold">Quiz History!</Typography>
+                            </div>
+                            <div className="flex justify-center">
+                            <table className="table-fixed">
+                                <thead className="p-3 border-b">
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </thead>
+                                <tbody>
+                                {quizHistory.History.map((ans) =>
+                                <tr className="border-b">
+                                    <td className="px-4 py-2">{ans.score}%</td>
+                                    <td className="px-4 py-2">{ans.date}</td>
+                                </tr>
                                 )}
-                                </div>
-                            )}
+                                </tbody>
+                            </table>
+                            </div>
                         </div>
-                        <div className="flex justify-end">
-                            <Button
-                                className="my-5 mx-3 px-5 py-2"
-                                variant="outlined"
-                                color="info"
-                                onClick={() => setQuizStart(false)}
-                            >
-                                START
-                            </Button>
-                        </div>
+                    ):
+                    <div className="flex justify-center">
+                        <Typography level="h5" className="font-bold">This is your first attempt at this quiz. Good Luck!</Typography>
                     </div>
+                    }
+                    
+                <div className="flex justify-end">
+                    <Button
+                        className="my-5 mx-3 px-5 py-2"
+                        variant="outlined"
+                        color="info"
+                        onClick={() => setQuizStart(false)}
+                    >
+                        START
+                    </Button>
+                </div>
+            </div>
             )
         }
         if (quizEnd){
@@ -113,7 +127,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             const finalScore = Math.floor((score/quizInfo.length)*100);
             const date = new Date();
             if (user){
-                //saveScore((date.toString()),finalScore)                                
+                saveScore((date.toString()),finalScore)                                
             }
             const data = {
                 datasets: [{
@@ -133,18 +147,34 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                             <Doughnut className="scale-50" data={data} options={{}}></Doughnut>
                         </div>
                         <div className="overflow-y-auto max-h-64">
-                            {user && (
-                                <div className="grid grid-cols-2 mt-5 ml-10">
-                                    <p>Score</p>
-                                    <p>Date</p>
-                                    {quizHistory.History.map((ans) =>
-                                    <>
-                                    <p>{ans.score}%</p>
-                                    <p>{ans.date}</p>
-                                    </>
-                                )}
+                            {(user) && 
+                                    quizHistory.History ? (
+                                    <div className="flex justify-center overflow-y-auto max-h-64 max-w-1/2">
+                                        <div className="mb-4 flex justify-center">
+                                            <Typography level="h5" className="underline font-bold">Quiz History!</Typography>
+                                        </div>
+                                        <div className="flex justify-center">
+                                        <table className="table-fixed">
+                                            <thead className="p-3 border-b">
+                                                <th>Score</th>
+                                                <th>Date</th>
+                                            </thead>
+                                            <tbody>
+                                            {quizHistory.History.map((ans) =>
+                                            <tr className="border-b">
+                                                <td className="px-4 py-2">{ans.score}%</td>
+                                                <td className="px-4 py-2">{ans.date}</td>
+                                            </tr>
+                                            )}
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                    </div>
+                                ):
+                                <div className="flex justify-center">
+                                    <Typography level="h5" className="font-bold">No Quiz History</Typography>
                                 </div>
-                            )}
+                                }
                         </div>
                     </div>
                 </div>
