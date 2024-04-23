@@ -11,17 +11,21 @@ const Login = () => {
   const user = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signIn , userRes , loading, error] = useSignInWithEmailAndPassword(auth);
+  const [signIn] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
+
+
+  const logOut = () =>{
+    signOut(auth)
+    router.push('/')
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await signIn(email, password);
-      setEmail('');
-      setPassword('');
-      router.push('/');
     } catch (error) {
+      console.log("here")
       console.error("Error during login:", error.message);
       toast.error('Email/Password Invalid!', {
         position: "top-center",
@@ -86,7 +90,7 @@ const Login = () => {
               </div>
               <div className="flex justify-center">
                 <a href="/" className="text-white mx-5 hover:text-blue-300 rounded px-2 py-1 block">Back to Edudev</a>
-                <a href="/" className="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</a>
+                <button onClick={()=>logOut()} className="text-white mx-5 bg-red-600 hover:text-gray-300 hover:bg-red-700 rounded px-2 py-1 block font-bold">Logout</button>
               </div>
             </Paper>
           )}

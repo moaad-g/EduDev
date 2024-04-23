@@ -20,13 +20,12 @@ import { motion } from "framer-motion";
 export default function Navbar() {
     const router = useRouter();
     const user = useContext(AuthContext);
-    const [accountMenu, setAccountMenu] = useState(false);
-    const [anchorEl, setAnchorEl] = useState();
-
-    const redirectProfile = () => {
-        setAnchorEl(null);
-        router.push('/profile')
+    
+    const logOut = () =>{
+        signOut(auth)
+        router.push('/')
     }
+
     return(
         <AppBar position='static'>
             <Toolbar className='flex justify-between'>
@@ -84,7 +83,7 @@ export default function Navbar() {
                             >
                                 <IconButton
                                     size="large"
-                                    onClick={() => signOut(auth)}
+                                    onClick={() => logOut()}
                                 >
                                     <LogoutIcon className='scale-125' />
                                 </IconButton>
