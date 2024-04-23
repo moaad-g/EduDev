@@ -39,7 +39,7 @@ const Sandbox = () => {
     "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
     };
 
-    const softwareList = {"PC":["Ubuntu", "Mint","Debian" , "Windows"], "Server":["RedHat","CentOS","Windows"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
+    const softwareList = {"PC":["Ubuntu","Mint","Debian","Windows"], "Server":["RedHat","CentOS","Windows"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
 
     const [newDeviceType, setNewDeviceType] = useState("");
     const [newCPU, setNewCPU] = useState();
@@ -206,7 +206,7 @@ const Sandbox = () => {
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
             const cpuString = ramValues[newDeviceType][newCPU-1].label;
-            newDeviceInfo = {Type:newDeviceType , OS :newOS , CPU: cpuString , RAM:ramString, STO:stoString}
+            newDeviceInfo = {Type:newDeviceType , OS :servType , CPU: cpuString , RAM:ramString, STO:stoString}
         } else if (newDeviceType =="Server"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;

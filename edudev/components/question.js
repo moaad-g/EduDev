@@ -19,11 +19,12 @@ ChartJS.register(
 
 const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     const user = useContext(AuthContext);
+    const [quizStart, setQuizStart] = useState(true);
+    const [quizEnd, setQuizEnd] = useState(false);
+
     const [questionNum, setQuestionNum] = useState(0);
     const [score, setScore] = useState(0);
-    const [showInfo, setShowinfo] = useState(false);
     const [selection, setSelection] = useState('');
-    const [quizEnd, setQuizEnd] = useState(false);
     const question = quizInfo[questionNum].Question;
     const answerList = quizInfo[questionNum].Answers;
     const correctAns = quizInfo[questionNum].Answers[quizInfo[questionNum].correct];
@@ -74,9 +75,42 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
     
 
     const renderQuestion = () => {
+        if (quizStart){
+            return (
+                <div className='bg-gray-800 flex flex-col justify-between rounded-lg w-full h-full shadow-lg relative shadow-xl p-7'>
+                    <div className="flex justify-center mt-1">
+                        <Typography level="h4" className="font-bold">Start Quiz</Typography>
+                    </div>
+                        <div className="overflow-y-auto max-h-64">
+                            {user && (
+                                <div className="grid grid-cols-2 mt-5 ml-10">
+                                    <p>Score</p>
+                                    <p>Date</p>
+                                    {quizHistory.History.map((ans) =>
+                                    <>
+                                    <p>{ans.score}%</p>
+                                    <p>{ans.date}</p>
+                                    </>
+                                )}
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex justify-end">
+                            <Button
+                                className="my-5 mx-3 px-5 py-2"
+                                variant="outlined"
+                                color="info"
+                                onClick={() => setQuizStart(false)}
+                            >
+                                START
+                            </Button>
+                        </div>
+                    </div>
+            )
+        }
         if (quizEnd){
             var thisQuizHistory = []
-            const finalScore = score/quizInfo.length;
+            const finalScore = Math.floor((score/quizInfo.length)*100);
             const date = new Date();
             console.log(quizHistory.History)
             if (user){
@@ -84,7 +118,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             }
             const data = {
                 datasets: [{
-                    data:[3,quizInfo.length] , 
+                    data:[score,quizInfo.length-score] , 
                     backgroundColor: ['green','transparent'],
                     borderColor: ['green','red'],
                 }]
@@ -92,11 +126,11 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
             return (
                 <div className='bg-gray-800 rounded-lg w-full h-full shadow-lg relative shadow-xl p-7'>
                     <div className="flex justify-center mt-1">
-                        <Typography level="h4" className="font-bold">Quiz Complete! {quizInfo.length}</Typography>
+                        <Typography level="h4" className="font-bold">Quiz Complete!</Typography>
                     </div>
                     <div className="flex justify-between">
-                        <div className="flex flex-col">
-                            <p>here</p>
+                        <div className="">
+                            <p className="ml-2">You Scored {finalScore}%</p>
                             <Doughnut className="scale-50" data={data} options={{}}></Doughnut>
                         </div>
                         <div className="overflow-y-auto max-h-64">
