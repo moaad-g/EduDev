@@ -5,24 +5,34 @@ import { auth } from "@/app/firebase";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/app/layout";
 import { Paper } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const user = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signIn] = useSignInWithEmailAndPassword(auth);
+  const [signIn , userRes , loading, error] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await signIn(email, password);
-      console.log(res);
       setEmail('');
       setPassword('');
-      router.push('/')
+      router.push('/');
     } catch (error) {
       console.error("Error during login:", error.message);
+      toast.error('Email/Password Invalid!', {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
   }
     return (

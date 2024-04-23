@@ -12,34 +12,33 @@ const SignUpComp = () => {
   const [password, setPassword] = useState("");
   const [confPass, setConfPass] = useState("");
   const router = useRouter();
-  const [createUser] = useCreateUserWithEmailAndPassword(auth);
+  const [createUser , user ,loading , error ]= useCreateUserWithEmailAndPassword(auth);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
       const res = await createUser(email,password);
+      if (res.user){
+        toast.success('Registration Successful!', {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+      }
       setEmail('');
       setPassword('');
       setConfPass('');
-      toast.success('Account Created', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
+      router.push('/');
     } catch (error) {
-      console.error("Error during login:", error.message);
-      console.log("here")
-      setEmail('');
-      setPassword('');
-      setConfPass('');
-      toast.error('Progress Upload Error', {
+      console.error("Error:", error.message);
+      toast.error('User already exists', {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -47,8 +46,7 @@ const SignUpComp = () => {
         progress: undefined,
         theme: "light",
         });
-      
-    }
+    } 
   };
     return (
         <Paper elevation={10}>
