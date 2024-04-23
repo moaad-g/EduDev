@@ -15,5 +15,5 @@ Secondly, Quizzes, you probably saw the quizzes tab on the topic page and hopefu
 <p className="m-3"><p>
 Finally, The Sandbox. This will be where you can visualise all the concepts we discuss over the courses, creating your own network of personal and enterprise computers and creating connections between them.
 <p className="m-10"></p>
-So, welcome to EduDev! and if you haven't already, tak your
+So, welcome to EduDev! and if you haven't already, take your
 <a className="hover:text-blue-300" href="/topics/Introduction/quiz/DevOps">first quiz.</a>

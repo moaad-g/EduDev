@@ -24,4 +24,5 @@ So what does this mean, what do all these things do? Well traditionally the app 
 
 <p className="m-10"><p>
 Enough reading, here is a great video from github promply explaining the concept:
+<p className="m-3"></p>
 <iframe className="w-full" width="1264" height="711" src="https://www.youtube.com/embed/kBV8gPVZNEE" title="What is DevOps?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

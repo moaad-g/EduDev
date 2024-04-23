@@ -126,6 +126,7 @@ const Sandbox = () => {
                 imgString = imgString+"-Cloud"
             }
         }
+        console.log(imgString)
         return (imgString)  
     }
     const saveSandbox = async() => {
@@ -204,12 +205,12 @@ const Sandbox = () => {
         if (newDeviceType =="PC"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
-            const cpuString = ramValues[newDeviceType][newCPU-1].label;
+            const cpuString = cpuValues[newDeviceType][newCPU-1].label;
             newDeviceInfo = {Type:newDeviceType , OS :servType , CPU: cpuString , RAM:ramString, STO:stoString}
         } else if (newDeviceType =="Server"){
             const ramString = ramValues[newDeviceType][newRam-1].label;
             const stoString = stoValues[newDeviceType][newSto-1].label;
-            const cpuString = ramValues[newDeviceType][newCPU-1].label;
+            const cpuString = cpuValues[newDeviceType][newCPU-1].label;
             if (isVirtual){
                 newDeviceInfo = {Type:newDeviceType , Cloud:cloudString , VirtualMachines: virtualMachines , CPU: cpuString , RAM:ramString, STO:stoString}
             } else {
@@ -257,6 +258,8 @@ const Sandbox = () => {
         setConnections(connections => [...connections,newConn])
         setNewStart(null);
     }
+    console.log(devices)
+    console.log(connections)
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h h-3/4" ref={windowRef}>
@@ -323,7 +326,7 @@ const Sandbox = () => {
                                         ):(
                                             <div>
                                                 {Object.entries(devices[index].info).map(([infokey, info]) => (
-                                                    <p>{infokey}:{info}</p>
+                                                    <p>{infokey}: {info}</p>
                                                 ))}
                                             </div>
                                         )
