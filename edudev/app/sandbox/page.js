@@ -27,16 +27,14 @@ const Sandbox = () => {
     }])
     const [connections,setConnections] = useState([{start:"1" , end:"2"}, {start:"1" , end:"3"}]);
 
-    // [id: [{id2: ,  type:}]]
-
     const ramValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
                         "Server":[{value:1 ,label:"32GB"},{value:2 ,label:"64GB"},{value:3 ,label:"128GB"},{value:4 ,label:"256GB"},{value:5 ,label:"512GB"},{value:6 ,label:"1TB"}],
     };
-    const stoValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
-    "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
+    const stoValues = { "PC":[{value:1 ,label:"256GB"},{value:2 ,label:"500GB"},{value:3 ,label:"1TB"},{value:4 ,label:"2TB"}],
+    "Server":[{value:1 ,label:"1TB"},{value:2 ,label:"4TB"},{value:3 ,label:"10TB"},{value:4 ,label:"100TB"},{value:5 ,label:"1PB"}],
     };
     const cpuValues = { "PC":[{value:1 ,label:"2 Cores"},{value:2 ,label:"4 Cores"},{value:3 ,label:"6 Cores"},{value:4 ,label:"8 Cores"},{value:5 ,label:"12 Cores"}],
-    "Server":[{value:1 ,label:"64GB"},{value:2 ,label:"128GB"},{value:3 ,label:"256GB"},{value:4 ,label:"512GB"},{value:5 ,label:"1TB"}],
+    "Server":[{value:1 ,label:"8 cores"},{value:2 ,label:"10 cores"},{value:3 ,label:"32cores"},{value:4 ,label:"64cores"},{value:5 ,label:"96 Cores"},{value:5 ,label:"128 Cores"}],
     };
 
     const softwareList = {"PC":["Ubuntu","Mint","Debian","Windows"], "Server":["RedHat","CentOS","Windows"] , "Database": ["MySQL","PostgreSQL","MongoDB","Firebase"] , "Cluster": ["Database Cluster","App Cluster"] };
@@ -265,6 +263,7 @@ const Sandbox = () => {
             <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h h-3/4" ref={windowRef}>
                 <nav className="flex justify-between bg-gray-800 text-white py-2 px-4 w-full absolute z-10">
                     <Button
+                    aria-label='Add Device button'
                     variant="contained"
                     color='secondary'
                     startIcon={<AddCircleIcon />}
@@ -275,7 +274,7 @@ const Sandbox = () => {
                     </Button>
                     {user &&
                         <div className='flex'>
-                            <IconButton onClick={()=>setShowLoad(true)}>
+                            <IconButton aria-label="Load sandbox button" onClick={()=>setShowLoad(true)}>
                                 <CloudDownloadIcon />
                             </IconButton>
                         </div>
@@ -356,8 +355,7 @@ const Sandbox = () => {
                                 end={connection.end}
                                 path={"grid"}
                                 dashness={true}
-                                animateDrawingS
-                                color='green'
+                                color='blue'
                             />
                         ))}
                     {newStart && (
@@ -373,7 +371,7 @@ const Sandbox = () => {
                         </Fab>
                     )}
                     <Dialog open={showLoad}>
-                        <div className='p-5'>
+                        <div aria-label="load sandbox" className='p-5'>
                             <DialogTitle>Select A Saved Sandbox</DialogTitle>
                             <DialogContent>
                                 <label className="block text-black mb-2">
@@ -396,7 +394,7 @@ const Sandbox = () => {
                         </div>
                     </Dialog>
                     <Dialog open={showSave}>
-                        <div className='p-5'>
+                        <div aria-label="save sandbox" className='p-5'>
                             <DialogTitle>Set Sandbox Name</DialogTitle>
                             <DialogContent>
                                 <input
@@ -414,11 +412,12 @@ const Sandbox = () => {
                         </div>
                     </Dialog>
                     {showPopup &&(
-                        <div className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 h-2/3 rounded shadow-xl overflow-x-hidden overflow-y-auto text-white border border-4 border-gray-300">
+                        <div aria-label="Add device popup" className="absolute bg-gray-800 z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 w-1/3 h-2/3 rounded shadow-xl overflow-x-hidden overflow-y-auto text-white border border-4 border-gray-300">
                             <h2 className="text-lg font-bold mb-2">Add Device</h2>
                             <label className="block mb-2">
                                 Device Type:
                                 <select
+                                    aria-label="select type"
                                     defaultValue=""
                                     onChange={(e) => changeType(e.target.value)}
                                     className="block w-full p-2 border rounded-md text-black"
@@ -436,6 +435,7 @@ const Sandbox = () => {
                                     Device Name:
                                     </label>
                                     <input
+                                        aria-label="device name input"
                                         className=" w-full rounded border bg-gray-200 p-1 text-black"
                                         type="text"
                                         name="name"
@@ -445,7 +445,7 @@ const Sandbox = () => {
                                     <Divider className='m-2' variant="middle" />
                                 {/*SERVER*/}
                                 {newDeviceType != "PC" && (
-                                    <div className='flex justify-center items-center mb-4'>
+                                    <div aria-label="cloud setting" className='flex justify-center items-center mb-4'>
                                     <p>On Prem</p>
                                     <Switch color='info' checked={isCloud} onChange={(e)=>setCloud(e.target.checked)} />
                                     <p>Cloud</p>
@@ -454,14 +454,15 @@ const Sandbox = () => {
                                 {newDeviceType == "Server" && (
                                     <div>
                                     <Divider className='m-2' variant="middle" />
-                                    <div className='flex justify-center'>
+                                    <div aria-label="virtual setting" className='flex justify-center'>
                                         <FormControlLabel control={<Switch color='secondary' checked={isVirtual} onChange={(e)=>setVirtual(e.target.checked)}/>} label="Virtualisation" labelPlacement='top' />
                                     </div>
                                     {isVirtual && (
-                                        <div className=''>
+                                        <div aria-label="virtualisation tab" className=''>
                                             <h3 className='mx-auto'>Number of Virtual Machines:</h3>
                                             <div className='flex justify-center'>
                                                 <Slider
+                                                aria-label="select vm num"
                                                 className='w-11/12'
                                                 valueLabelDisplay='auto'
                                                 color='secondary'
@@ -479,6 +480,7 @@ const Sandbox = () => {
                                                     <label className="block mb-2 text-xs mx-1">
                                                         Machine Function:
                                                     <select
+                                                        aria-label="select vm func"
                                                         defaultValue=""
                                                         onChange={(e) => setVmFunc(index , e.target.value)}
                                                         className="block w-full p-2 border rounded text-xs text-black"
@@ -517,7 +519,7 @@ const Sandbox = () => {
 
                                     )}
                                     {!isVirtual && (
-                                        <div className=''>
+                                        <div aria-label="server not vm" className=''>
                                             <div>
                                                 <Divider className='m-2' variant="middle" />
                                             <div className='grid grid-cols-2'>
@@ -568,6 +570,7 @@ const Sandbox = () => {
                                     <label className="block mb-2 mx-1">
                                     {newDeviceType == "Cluster" ? "Select Cluster Type": "Select OS"}
                                     <select
+                                        aria-label="select settings"
                                         defaultValue=""
                                         onChange={(e) => setServeType(e.target.value)}
                                         className="block w-full p-2 border rounded text-black"
@@ -580,7 +583,7 @@ const Sandbox = () => {
                                     </label>
                                 )}
                                 {newDeviceType != "Cluster" && (
-                                    <div className='flex-col justify-center'>
+                                    <div aria-label="select specs" className='flex-col justify-center'>
                                         <label className="block mb-2 mx-1 p-3">
                                             Set CPU:
                                             <Slider
@@ -623,7 +626,7 @@ const Sandbox = () => {
                                 )}
                             </div>
                             )}
-                            <button onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
+                            <button aria-label="Submit device button" onClick={addDevice} className={`cursor-pointer text-white py-2 px-4 rounded-md mx-1 ${disableForm ? "bg-gray-500": "bg-blue-500 hover:bg-blue-700"}`} disabled={disableForm}>Add Device</button>
                             <button onClick={() => closePopup()} className="cursor-pointer bg-red-500 text-white py-2 px-4 mx-1 rounded-md hover:bg-red-700">Cancel</button>
                         </div>
                     )}

@@ -13,7 +13,7 @@ describe('Enter email into box', () => {
     });
 
     it('should fail login if information is wrong', () => {
-        const email = 'test@company.com';
+        const email = 'test@account.com';
         const password = 'password333';
         cy.get('input[type="email"]').type(email);
         cy.get('input[type="password"]').type(password);
@@ -22,12 +22,11 @@ describe('Enter email into box', () => {
       });
   
     it('should successfully login if user exists', () => {
-      const email = 'test2@company.com';
-      const password = 'password123';
+      const email = 'test@account.com';
+      const password = 'testpass';
       cy.get('input[type="email"]').type(email);
       cy.get('input[type="password"]').type(password);
       cy.get('button[type="submit"]').click();
       cy.contains('Logout').click()
-      
     });
 });

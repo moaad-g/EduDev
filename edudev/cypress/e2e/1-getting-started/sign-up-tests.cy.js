@@ -10,15 +10,15 @@ describe('Enter email into box', () => {
       });
     
       it('should show error message if password is less than 8 characters', () => {
-        cy.get('input[type="password"]').eq(0).type('pass');
-        cy.get('input[type="password"]').eq(1).type('pass');
+        cy.get('input[type="password"]').eq(0).type('three');
+        cy.get('input[type="password"]').eq(1).type('three');
         cy.get('button[type="submit"]').should('be.disabled')
         cy.contains('passwords must be 8 characters minimum').should('exist');
       });
 
       it('should fail sign up if user exists', () => {
-        const email = 'test@company.com';
-        const password = 'password123';
+        const email = 'example@company.com';
+        const password = 'examplepass';
         cy.get('input[type="email"]').type(email);
         cy.get('input[type="password"]').eq(0).type(password);
         cy.get('input[type="password"]').eq(1).type(password);
@@ -27,12 +27,15 @@ describe('Enter email into box', () => {
       });
     
       it('should successfully sign up if all fields are valid', () => {
-        const email = 'test2@company.com';
-        const password = 'password123';
+        const email = 'test@account.com';
+        const password = 'testpass';
         cy.get('input[type="email"]').type(email);
         cy.get('input[type="password"]').eq(0).type(password);
         cy.get('input[type="password"]').eq(1).type(password);
         cy.get('button[type="submit"]').click();
         cy.contains('Registration Successful!').should('exist');
+
+        cy.get('button[aria-label="logout"]').click()
+        cy.url().should('eq','http://localhost:3000/')
       });
   });

@@ -8,18 +8,22 @@ describe('Navbar component (logged in)', () => {
         cy.get('input[type="email"]').type(email);
         cy.get('input[type="password"]').type(password);
         cy.get('button[type="submit"]').click();
-
-        cy.get('img[alt="edudev logo"]').click()
-        cy.url().should('eq', 'http://localhost:3000/')
     
         cy.contains('SANDBOX').click()
         cy.url().should('eq', 'http://localhost:3000/sandbox')
-    
-        cy.contains('LEARN').click()
-        cy.url().should('eq',  'http://localhost:3000/topics')
 
-        cy.get('button[aria-label="profile"]').click()
-        cy.url().should('eq','http://localhost:3000/profile')
+        cy.get('button[aria-label="Load sandbox button"]').should('exist');
+        cy.get('button[aria-label="Save Sandbox"]').should('exist');
+        cy.get('div[aria-label="load sandbox"]').should('not.exist');
+        cy.get('div[aria-label="save sandbox"]').should('not.exist');
+
+        cy.get('button[aria-label="Load sandbox button"]').click()
+        cy.get('div[aria-label="load sandbox"]').should('exist');
+        cy.contains('Cancel').click()
+
+        cy.get('button[aria-label="Save Sandbox"]').click();
+        cy.get('div[aria-label="save sandbox"]').should('exist');
+        cy.contains('Cancel').click()
 
         cy.get('button[aria-label="logout"]').click()
         cy.url().should('eq','http://localhost:3000/')

@@ -48,7 +48,7 @@ const ListTopic = ({ params }) => {
         <AccordionDetails>
           <ul className="">
             {textList.map(item => (
-              <li key={item} className="list-disc m-3">
+              <li key={"content-"+item} className="list-disc m-3">
                 <a href={topicName+"/content/"+item} className="font-bold text-m hover:text-blue-300 rounded" >{item}</a>
               </li>
             ))}
@@ -68,7 +68,7 @@ const ListTopic = ({ params }) => {
         <AccordionDetails>
           <ul className="">
             {quizList.map(item => (
-              <li key={item} className="list-disc m-3">
+              <li key={"quiz-"+item} className="list-disc m-3">
                 <a href={topicName+"/quiz/"+item} className="font-bold text-m hover:text-blue-300 rounded" >{item}</a>
               </li>
             ))}
