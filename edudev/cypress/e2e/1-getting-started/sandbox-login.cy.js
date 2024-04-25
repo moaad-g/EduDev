@@ -1,4 +1,4 @@
-describe('Navbar component (logged in)', () => {
+describe('sandbox (logged in)', () => {
    
     it('clicks every button and asserts new URL', () => {
         cy.visit('http://localhost:3000/login')

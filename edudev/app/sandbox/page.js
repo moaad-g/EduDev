@@ -18,14 +18,67 @@ import { collection , getDocs , doc , setDoc } from 'firebase/firestore';
 const Sandbox = () => {
     const user = useContext(AuthContext);
     const windowRef = useRef(null);
-    const [devices,setDevices] = useState([{ 
-        id: "1" , x:50 , y:50 , name:"my PC" , info:{Type:"PC", OS:"Ubuntu" , cpu:"4", ram:"" , storage:"500 GB"}
-    }, {
-        id: "2" , x:50 , y:100 , name:"my PC" , info:{Type:"PC",OS:"Mint", cpu:"4", ram:"" , storage:"500 GB"}
-    },{
-        id: "3" , x:50 , y:150 , name:"my PC" , info:{Type:"PC", OS:"Mint", cpu:"4", ram:"" , storage:"500 GB"}
-    }])
-    const [connections,setConnections] = useState([{start:"1" , end:"2"}, {start:"1" , end:"3"}]);
+    
+    const [devices,setDevices] = useState([
+        {
+            "id": 586,
+            "x": 100,
+            "y": 100,
+            "name": "My-PC",
+            "info": {
+                "Type": "PC",
+                "OS": "Ubuntu",
+                "CPU": "4 Cores",
+                "RAM": "32GB",
+                "STO": "1TB"
+            }
+        },
+        {
+            "id": 855,
+            "x": 200,
+            "y": 200,
+            "name": "Web-Server",
+            "info": {
+                "Type": "Server",
+                "Cloud": "no",
+                "function": "Web Machine",
+                "OS": "CentOS",
+                "CPU": "32cores",
+                "RAM": "128GB",
+                "STO": "4TB"
+            }
+        },
+        {
+            "id": 681,
+            "x": 300,
+            "y": 400,
+            "name": "Database-Cluster",
+            "info": {
+                "Type": "Cluster",
+                "function": "Database Cluster",
+                "Cloud": "yes"
+            }
+        }
+    ])
+    
+    const [connections,setConnections] = useState([
+        {
+            "start": "586",
+            "end": "855"
+        },
+        {
+            "start": "855",
+            "end": "586"
+        },
+        {
+            "start": "855",
+            "end": "681"
+        },
+        {
+            "start": "681",
+            "end": "855"
+        }
+    ]);
 
     const ramValues = { "PC":[{value:1 ,label:"8GB"},{value:2 ,label:"16GB"},{value:3 ,label:"32GB"},{value:4 ,label:"64GB"},{value:5 ,label:"128GB"}],
                         "Server":[{value:1 ,label:"32GB"},{value:2 ,label:"64GB"},{value:3 ,label:"128GB"},{value:4 ,label:"256GB"},{value:5 ,label:"512GB"},{value:6 ,label:"1TB"}],
@@ -353,7 +406,6 @@ const Sandbox = () => {
                                 key={index}
                                 start={connection.start}
                                 end={connection.end}
-                                path={"grid"}
                                 dashness={true}
                                 color='blue'
                             />
