@@ -562,7 +562,6 @@ const Sandbox = () => {
                                                         ))}
                                                     </select>
                                                 </label>
-                                                    {/* Add your sub-menu components */}
                                                 </div>
                                                 </div>
                                             ))}

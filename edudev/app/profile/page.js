@@ -16,12 +16,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-// 1st make dict of progress
-// check user collection
-// check quiz ids
-// check pages read
-// totalprog = numofquizids/pagenum+quiznum
-
 const ProfilePage = () => {
     const [topicList, setTopicList] = useState([]);
     var user = useContext(AuthContext);
