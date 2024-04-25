@@ -26,7 +26,6 @@ const Login = () => {
     try {
       const res = await signIn(email, password);
     } catch (error) {
-      console.log("here")
       console.error("Error during login:", error.message);
       toast.error('Email/Password Invalid!', {
         position: "top-center",

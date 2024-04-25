@@ -41,7 +41,6 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
         return (array)
     }
 
-    // Initialize selectionList for question type 2
     if (questionType === 2 && selectionList.length === 0) {
         setSelectionList(shuffleArray(answerList.slice(answerList.length / 2, answerList.length)));
     }
@@ -95,7 +94,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                         quizHistory.History ? (
                         <div className="overflow-y-auto max-h-64">
                             <div className="mb-4 flex justify-center">
-                                <Typography level="h5" className="underline font-bold">Quiz History!</Typography>
+                                <Typography level="h5" className="underline font-bold">Quiz History</Typography>
                             </div>
                             <div className="flex justify-center">
                             <table className="table-fixed">
@@ -162,7 +161,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                                     quizHistory.History ? (
                                     <div className="flex justify-center overflow-y-auto max-h-64 max-w-1/2">
                                         <div className="mb-4 flex justify-center">
-                                            <Typography level="h5" className="underline font-bold">Quiz History!</Typography>
+                                            <Typography level="h5" className="underline font-bold">Quiz History</Typography>
                                         </div>
                                         <div className="flex justify-center">
                                         <table className="table-fixed">

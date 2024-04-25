@@ -1,4 +1,4 @@
-describe('Enter email into box', () => {
+describe('check sign up', () => {
       beforeEach(() => {
         cy.visit('http://localhost:3000/'); // Assuming '/signup' is the route for the SignUpComp component
       });
@@ -27,7 +27,7 @@ describe('Enter email into box', () => {
       });
     
       it('should successfully sign up if all fields are valid', () => {
-        const email = 'test@account.com';
+        const email = 'test10@account.com';
         const password = 'testpass';
         cy.get('input[type="email"]').type(email);
         cy.get('input[type="password"]').eq(0).type(password);

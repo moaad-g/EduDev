@@ -1,4 +1,4 @@
-describe('navigates to quizzes and completes', () => {
+describe('sandbox', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000/');
 

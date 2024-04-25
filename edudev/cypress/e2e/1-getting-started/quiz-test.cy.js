@@ -29,7 +29,7 @@ describe('navigates to quizzes and completes', () => {
         cy.contains('Submit').should('be.disabled')
         cy.get('button').click({ multiple: true });
     })
-    it('navigates to quiz with q_type 0 and completes it', () => {
+    it('navigates to quiz with q_type 1 and completes it', () => {
         const exampleans = 'incorrect';
         
         cy.get('a[href="Introduction/quiz/DevOps2"]').click();
