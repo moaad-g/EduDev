@@ -11,6 +11,7 @@ export default function Home() {
   const [currentArticle,setCurrentArticle] = useState(0);
   const router = useRouter();
   const user = useContext(AuthContext);
+  const rectopic = "Infrastructure"
 
   useEffect (() => {
     (async() =>{
@@ -73,7 +74,7 @@ export default function Home() {
             <div className='mt-10 py-10'>
               <Typography variant="h3" className="underline mt-10">Topic Of the Week</Typography>
                 <Typography className="mt-10" variant="h5">
-                    Continuous Integration
+                    <a href={'/topics/'+rectopic}>{rectopic}</a>
                 </Typography>
             </div>
           </div>
