@@ -8,9 +8,6 @@
 </p>
 
 <p className="m-10"><p>
-So what does this mean, what do all these things do? Well traditionally the app development teams and operation teams were seperate. The app teams would often hand off their code to the operation teams when it was completed and only see it again when it needed changing. DevOps changes this, a DevOps engineer/team will not only write the code but also deploy,maintain and monitor it. simple!
-
 <p className="m-10"><p>
 Extra Reading: <a className='hover:text-blue-300' href="https://ibm.com/topics/infrastructure">IBM discusses infrastructure<a>
 <p className="m-3"></p>
-<iframe className="w-full" width="1264" height="711" src="https://www.youtube.com/embed/kBV8gPVZNEE" title="What is DevOps?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

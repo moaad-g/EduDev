@@ -177,7 +177,6 @@ const Sandbox = () => {
                 imgString = imgString+"-Cloud"
             }
         }
-        console.log(imgString)
         return (imgString)  
     }
     const saveSandbox = async() => {
@@ -281,8 +280,8 @@ const Sandbox = () => {
         var updatedConnections = [...connections];
         updatedDevices.splice(index, 1);
         setDevices(devices => updatedDevices);
-        updatedConnections = updatedConnections.filter(map => map["start"] !== id);
-        updatedConnections = updatedConnections.filter(map => map["end"] !== id);
+        updatedConnections = updatedConnections.filter(map => map["start"] !== id.toString());
+        updatedConnections = updatedConnections.filter(map => map["end"] !== id.toString());
         setConnections(connections => updatedConnections);
     }
 
@@ -309,8 +308,6 @@ const Sandbox = () => {
         setConnections(connections => [...connections,newConn])
         setNewStart(null);
     }
-    console.log(devices)
-    console.log(connections)
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="bg-gray-200 relative rounded-lg shadow-lg w-2/3 h h-3/4" ref={windowRef}>
