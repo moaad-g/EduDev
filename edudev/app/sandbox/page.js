@@ -411,7 +411,7 @@ const Sandbox = () => {
                             />
                         ))}
                     {newStart && (
-                        <div className="absolute top-16 left-4 bg-white shadow-xl rounded p-4">
+                        <div className="absolute top-16 left-4 text-black bg-white shadow-xl rounded p-4">
                             <p>select connection end</p>
                             <Button color='error' onClick={()=>setNewStart(null)}>Cancel</Button>
                         </div>
