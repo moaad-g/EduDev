@@ -361,7 +361,7 @@ const Sandbox = () => {
                             />
                             {showDetails === device.id &&(
                                 <div>
-                                    <div className="absolute p-3 rounded text-black bg-white shadow-xl truncate">
+                                    <div className="absolute p-3 rounded text-black bg-white shadow-xl truncate z-10">
                                         <div className='overflow-y-auto whitespace'>
                                         <p>Name: {devices[index].id}</p>
                                         <p>Name: {devices[index].name}</p>
@@ -408,6 +408,7 @@ const Sandbox = () => {
                                 end={connection.end}
                                 dashness={true}
                                 color='blue'
+                                className = ''
                             />
                         ))}
                     {newStart && (
