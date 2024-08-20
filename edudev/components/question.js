@@ -223,7 +223,7 @@ const Question = ({ quizInfo , quizHistory, docRef , quizID }) => {
                 <div className='bg-gray-800 rounded-lg shadow-xl p-4'>
                     <div className='mb-5 flex justify-between'>
                         <h2 className='underline text-l'>Question {questionNum + 1} of {quizInfo.length}</h2>
-                        <Tooltip title="Hint: Drag the items in the right hand column to answer the question">
+                        <Tooltip title="Hint: Type the correct answer into the input box">
                             <IconButton>
                                 <InfoIcon />
                             </IconButton>

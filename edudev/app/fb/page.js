@@ -5,13 +5,13 @@ import React, { useEffect, useState, useContext } from "react";
 
 const addQuestions = () => {
 
-    const quizID = "DevOps3"
-    const q_type = 2;
-    const Question = "Match the terms and their definitions";
-    const Answers = ["Edudev", "DevOps","An educational platform" , "A software methodology"];
-    const correct = 0;
+    const quizID = "Introduction"
+    const q_type = 1;
+    const Question = "Fill in the blank.";
+    const Answers = ["", "is a term describing the components used to enable a digital service","Infrastructure"];
+    const correct = 2;
 
-    const docRef = doc(db, "Introduction", "Content", "Quizzes", quizID);
+    const docRef = doc(db, "Infrastructure", "Content", "Quizzes", quizID);
     const newQ = {q_type:q_type , Question:Question , Answers:Answers, correct:correct}
 
     const addq = async() =>{
@@ -19,6 +19,11 @@ const addQuestions = () => {
         const newdoc = await getDoc(docRef)
         const quizInfo = newdoc.data().quizInfo
         await setDoc(docRef, { quizInfo: [...quizInfo , newQ] });
+        
+
+        // await setDoc(docRef, { quizInfo: [newQ] });
+
+
     }
 
     return(
